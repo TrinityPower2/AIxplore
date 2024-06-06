@@ -2,6 +2,7 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from '../AIxplore/js/Login';
+import NearbySearch from '../AIxplore/js/NearbySearch'
 
 const Stack = createNativeStackNavigator();
 
@@ -10,6 +11,7 @@ function App() {
         <NavigationContainer>
             <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="Login" component={Login} />
+                <Stack.Screen name="NearbySearch" component={NearbySearch} />
             </Stack.Navigator>
         </NavigationContainer>
     );

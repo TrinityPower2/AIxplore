@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Animated, StyleSheet, Text, TextInput, Button, Image } from 'react-native';
+import { View, Animated, StyleSheet, Text, TextInput, Button, Image, Pressable } from 'react-native';
 
-const SplashPage = () => {
+const LoginPage = ({ navigation }) => {
     const logoOpacity = useRef(new Animated.Value(0)).current;
     const logoMoveY = useRef(new Animated.Value(0)).current;
     const [showLogin, setShowLogin] = useState(false);
@@ -25,7 +25,7 @@ const SplashPage = () => {
     }, [logoOpacity, logoMoveY]);
 
     const handleLogin = () => {
-        console.log(username, password);
+        navigation.navigate('NearbySearch');
     };
 
     return (
@@ -47,7 +47,25 @@ const SplashPage = () => {
                         placeholder="Password"
                         secureTextEntry={true}
                     />
-                    <Button title="Login" onPress={handleLogin} />
+                    <Pressable onPress={handleLogin}>
+                        <Text style={styles.textPwd}>Forgot Password ?</Text>
+                    </Pressable>
+                    <View style={styles.choiceContainer}>
+                        <View style={styles.choiceLine}/>
+                        <Text style={styles.choiceText}>   Or Connect Via Google   </Text>
+                        <View style={styles.choiceLine}/>
+                    </View>
+                    <View style={styles.googleContainer}>
+                        <Image source={require('../assets/logo_google.png')} style={styles.icon} />
+                        <Text style={styles.textGoogle}>Sign in with Google</Text>
+                    </View>
+                    <Pressable style={styles.button} onPress={handleLogin}>
+                        <Text style={styles.textButton}>Login</Text>
+                    </Pressable>
+                    <View style={styles.registerContainer}>
+                        <Text>Not registered yet ? Click</Text>
+                        <Text >here</Text>
+                    </View>
                 </View>
             )}
         </View>
@@ -82,7 +100,7 @@ const styles = StyleSheet.create({
     },
     loginContainer: {
         position: 'absolute',
-        top: '50%',
+        top: '35%',
         left: '10%',
         width: '80%',
         justifyContent: 'center',
@@ -102,13 +120,57 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 40,
         textAlign: 'left',
-        color: '#000'
+        color: '#000000'
     },
     icon: {
         width: 20,
         height: 20,
         marginRight: 10,
     },
+    textPwd: {
+        color: '#FFFFFF',
+        textDecorationLine: 'underline'
+    },
+    choiceContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        top: '15%'
+    },
+    choiceLine: {
+        flex: 1,
+        height: 1,
+        backgroundColor: '#D0D0D0',
+    },
+    choiceText: {
+        color: '#4CB6DC'
+    },
+    googleContainer: {
+        top: '10%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        margin: 50,
+        borderWidth: 1,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 10,
+        padding: 10
+    },
+    button: {
+        top: '7%',
+        width: '80%',
+        borderColor: '#FFFFFF',
+        borderWidth: 1,
+        borderRadius: 10,
+        backgroundColor: '#384454'
+    },
+    textButton: {
+        color: '#FFFFFF',
+        textAlign: 'center',
+        padding: 10
+    },
+    registerContainer: {
+        top: '13%',
+        flexDirection: 'row'
+    }
 });
 
-export default SplashPage;
+export default LoginPage;
