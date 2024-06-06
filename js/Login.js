@@ -13,7 +13,7 @@ const LoginPage = ({ navigation }) => {
         Animated.sequence([
             Animated.timing(logoOpacity, {
                 toValue: 1,
-                duration: 3000,
+                duration: 2000,
                 useNativeDriver: true
             }),
             Animated.timing(logoMoveY, {
@@ -26,6 +26,14 @@ const LoginPage = ({ navigation }) => {
 
     const handleLogin = () => {
         navigation.navigate('NearbySearch');
+    };
+
+    const handlePwd = () => {
+        navigation.navigate('List');
+    };
+
+    const handleRegister = () => {
+        navigation.navigate('Register');
     };
 
     return (
@@ -47,7 +55,7 @@ const LoginPage = ({ navigation }) => {
                         placeholder="Password"
                         secureTextEntry={true}
                     />
-                    <Pressable onPress={handleLogin}>
+                    <Pressable onPress={handlePwd}>
                         <Text style={styles.textPwd}>Forgot Password ?</Text>
                     </Pressable>
                     <View style={styles.choiceContainer}>
@@ -63,8 +71,10 @@ const LoginPage = ({ navigation }) => {
                         <Text style={styles.textButton}>Login</Text>
                     </Pressable>
                     <View style={styles.registerContainer}>
-                        <Text>Not registered yet ? Click</Text>
-                        <Text >here</Text>
+                        <Text style={{ color: 'white' }}>Not registered yet ? Click </Text>
+                        <Pressable onPress={handleRegister}>
+                            <Text style={{ textDecorationLine: 'underline', color: '#4CB6DC' }}>here</Text>
+                        </Pressable>
                     </View>
                 </View>
             )}
