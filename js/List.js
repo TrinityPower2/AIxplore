@@ -31,6 +31,10 @@ const ListPage = ({ navigation }) => {
         navigation.navigate('Login');
     };
 
+    const goToForm = (index) => {
+        navigation.navigate('Form', { placeName: data[index].name });
+    };
+
     return (
         <View style={styles.container}>
             <Image style={styles.logo} source={require('../assets/real_logo.png')} />
@@ -46,7 +50,8 @@ const ListPage = ({ navigation }) => {
                 {data.map((item, index) => (
                     <View key={item.id} style={[styles.item, getStyleForPosition(index + 1)]}>
                         <Image source={item.image} style={styles.itemImage}></Image>
-                        <Text style={{ fontSize: getStyleForPosition(index + 1).fontSize, color: getStyleForPosition(index + 1).color }}>
+                        <Text style={{ fontSize: getStyleForPosition(index + 1).fontSize, color: getStyleForPosition(index + 1).color }} 
+                            onPress={() => goToForm(index)} >
                             {item.name} - {item.detail}
                         </Text>
                     </View>
