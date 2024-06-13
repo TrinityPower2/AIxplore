@@ -1,13 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Image, Text, TextInput, Pressable } from 'react-native';
+import { auth } from '../Firebase';
 
 const RegisterPage = ({ navigation }) => {
 
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
 
     const handleRegister = () => {
+        auth
+            .createUserWithEmailAndPassword(email, password)
+            .then(userCredentials => {
+                const user = userCredentials.user;
+                console.log(user.email);
+            })
+            .catch(error => alert(error.message))
         navigation.navigate('Login');
     };
 
@@ -17,8 +24,8 @@ const RegisterPage = ({ navigation }) => {
             <View style={styles.registerContainer}>
                 <CustomInput
                     imageSource={require('../assets/icon_username.png')}
-                    onChangeText={setUsername}
-                    value={username}
+                    onChangeText={setEmail}
+                    value={email}
                     placeholder="Email"                    
                 />
                 <CustomInput
@@ -26,13 +33,6 @@ const RegisterPage = ({ navigation }) => {
                     onChangeText={setPassword}
                     value={password}
                     placeholder="Password"
-                    secureTextEntry={true}
-                />
-                <CustomInput
-                    imageSource={require('../assets/icon_password.png')}
-                    onChangeText={setConfirmPassword}
-                    value={confirmPassword}
-                    placeholder="Confirm Password"
                     secureTextEntry={true}
                 />
                 <Pressable style={styles.button} onPress={handleRegister}>

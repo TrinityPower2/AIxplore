@@ -16,6 +16,7 @@
     "expo-font": "~12.0.6",
     "expo-status-bar": "~1.12.1",
     "expo-updates": "~0.25.15",
+    "firebase": "^10.12.2",
     "react": "18.2.0",
     "react-native": "0.74.1",
     "react-native-picker-select": "^9.1.3",
