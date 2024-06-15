@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, Image, Text, TextInput, Pressable } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Image, Text, Pressable } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
 
