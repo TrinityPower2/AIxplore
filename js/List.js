@@ -51,14 +51,26 @@ const ListPage = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Image style={styles.logo} source={require('../assets/real_logo.png')} />
-            <View style={styles.cityContainer}>
-                <CustomInput
-                    imageSource={require('../assets/icon_location.png')}
-                    onChangeText={setCity}
-                    value={city}
-                    placeholder="Paris"
-                />
-            </View>
+            
+                
+                <View style={styles.cityContainer}>
+                    <View style={{flex: 1}}>
+                    <CustomInput
+                            imageSource={require('../assets/icon_location.png')}
+                            onChangeText={setCity}
+                            value={city}
+                            placeholder="Paris"
+                        />
+                    </View>
+                    <View style={{marginLeft: 10}}>
+                        <Pressable onPress={() => navigation.navigate('Filtres')}>
+                            <View style={styles.iconBox}>
+                                <Image source={require('../assets/icon_filters.png')} style={[styles.icon, {marginLeft: 10}]} />
+                            </View>
+                        </Pressable>
+                    </View>
+                </View>
+       
             <ScrollView style={styles.listContainer}>
                 {data.map((item, index) => (
                     <View key={item.id} style={[styles.item, getStyleForPosition(index + 1)]}>
@@ -109,6 +121,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#384454',
         padding: 10,
+        flexDirection: 'row',
     },
     inputContainer: {
         flexDirection: 'row',
@@ -128,6 +141,11 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         marginRight: 10,
+    },
+    iconBox: {
+        backgroundColor: '#ccc',
+        padding: 10,
+        borderRadius: 10,
     },
     home: {
         width: 100, 

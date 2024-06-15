@@ -6,6 +6,7 @@ import NearbySearch from '../AIxplore/js/NearbySearch';
 import Register from '../AIxplore/js/Register';
 import List from '../AIxplore/js/List';
 import Form from '../AIxplore/js/Form';
+import Filtres from '../AIxplore/js/Filtres';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ function App() {
                 <Stack.Screen name="Register" component={Register} />
                 <Stack.Screen name="List" component={List} />
                 <Stack.Screen name="Form" component={Form} />
+                <Stack.Screen name="Filtres" component={Filtres} />
             </Stack.Navigator>
         </NavigationContainer>
     );
