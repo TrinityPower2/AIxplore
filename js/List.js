@@ -31,8 +31,8 @@ const ListPage = ({ navigation }) => {
         navigation.navigate('Login');
     };
 
-    const goToForm = (index) => {
-        navigation.navigate('Form', { placeName: data[index].name });
+    const goToNote = (index) => {
+        navigation.navigate('RatingForm', { placeName: data[index].name });
     };
 
     const createPopup = (index) => {
@@ -42,7 +42,7 @@ const ListPage = ({ navigation }) => {
             `${item.name}\n${item.detail}`,
             [
                 { text: "Annuler", style: "cancel" },
-                { text: "Noter", onPress: () => navigation.navigate('Form', { placeName: data[index].name })}
+                { text: "Noter", onPress: () => navigation.navigate('RatingForm', { placeName: data[index].name })}
             ],
             { cancelable: true }
         );
@@ -63,7 +63,7 @@ const ListPage = ({ navigation }) => {
                         />
                     </View>
                     <View style={{marginLeft: 10}}>
-                        <Pressable onPress={() => navigation.navigate('Filtres')}>
+                        <Pressable onPress={() => navigation.navigate('Filters')}>
                             <View style={styles.iconBox}>
                                 <Image source={require('../assets/icon_filters.png')} style={[styles.icon, {marginLeft: 10}]} />
                             </View>

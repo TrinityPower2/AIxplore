@@ -4,7 +4,7 @@ import Slider from '@react-native-community/slider';
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
 
 
-const Filtres = ({ navigation }) => {
+const Filters = ({ navigation }) => {
     
     const [proximity, setProximity] = useState(1);
     const [selected, setSelected] = useState([]);
@@ -117,4 +117,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Filtres;
+export default Filters;
