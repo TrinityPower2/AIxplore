@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Image, Text, Pressable } from 'react-native';
 import Slider from '@react-native-community/slider';
+import StarRating from 'react-native-star-rating-widget';
 
 const WelcomeForm = () => {
     const [answer, setAnswer] = useState(1);
@@ -12,7 +13,7 @@ const WelcomeForm = () => {
                 <Image style={styles.placePicture} source={require('../assets/icon_image.png')}></Image>
                 <Text style={{color: '#FFFFFF', fontSize: 20, fontWeight: 'bold', marginTop: 15}}>Nom du lieu affiché à l'image</Text>
                 <Text style={[styles.textButton, {marginTop: 38}]}>Envie de visiter: {answer}/10</Text>
-                <Slider
+                {/* <Slider
                     style={{width: 200, height: 40}}
                     minimumValue={0}
                     maximumValue={10}
@@ -22,6 +23,10 @@ const WelcomeForm = () => {
                     step={1}
                     value={answer}
                     onValueChange={(value) => setAnswer(value)}
+                /> */}
+                <StarRating
+                    rating={answer}
+                    onChange={setAnswer}
                 />
                 <Pressable style={[styles.button, {marginTop: 25}]} onPress={() => navigation.navigate('WelcomeForm')}>
                     <Text style={styles.textButton}>Valider</Text>
