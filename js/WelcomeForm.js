@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image, Text, Pressable } from 'react-native';
-import Slider from '@react-native-community/slider';
 import StarRating from 'react-native-star-rating-widget';
 
-const WelcomeForm = () => {
-    const [answer, setAnswer] = useState(1);
+const WelcomeForm = ({ navigation })  => {
+    const [userAnswer, setUserAnswer] = useState(1);
+    const [modelAnswer, setModelAnswer] = useState(userAnswer * 2);
+
+    useEffect(() => {
+        console.log('user:', userAnswer);
+        console.log('model:', modelAnswer);
+    }, [userAnswer, modelAnswer]);
+
+    const handleAnswer = (userAnswer) => {
+        setUserAnswer(userAnswer);
+        setModelAnswer(userAnswer * 2);
+    }
 
     return (
         <View style={styles.container}>
@@ -12,23 +22,15 @@ const WelcomeForm = () => {
             <View style={styles.registerContainer}>
                 <Image style={styles.placePicture} source={require('../assets/icon_image.png')}></Image>
                 <Text style={{color: '#FFFFFF', fontSize: 20, fontWeight: 'bold', marginTop: 15}}>Nom du lieu affiché à l'image</Text>
-                <Text style={[styles.textButton, {marginTop: 38}]}>Envie de visiter: {answer}/10</Text>
-                {/* <Slider
-                    style={{width: 200, height: 40}}
-                    minimumValue={0}
-                    maximumValue={10}
-                    minimumTrackTintColor="#5db9f8"
-                    maximumTrackTintColor="#FFFFFF"
-                    thumbTintColor="#000000"
-                    step={1}
-                    value={answer}
-                    onValueChange={(value) => setAnswer(value)}
-                /> */}
+                <Text style={[styles.textButton, {marginTop: 38}]}>Envie de visiter: {userAnswer}/5</Text>
                 <StarRating
-                    rating={answer}
-                    onChange={setAnswer}
+                    color='#5db9f8'
+                    emptyColor='#FFFFFF'
+                    size={40}
+                    rating={userAnswer}
+                    onChange={handleAnswer}
                 />
-                <Pressable style={[styles.button, {marginTop: 25}]} onPress={() => navigation.navigate('WelcomeForm')}>
+                <Pressable style={[styles.button, {marginTop: 25}]} onPress={() => navigation.navigate('List')}>
                     <Text style={styles.textButton}>Valider</Text>
                 </Pressable>
             </View>
