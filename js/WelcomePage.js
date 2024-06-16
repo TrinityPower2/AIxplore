@@ -11,9 +11,9 @@ const WelcomePage = ({ navigation }) => {
                     Ce questionnaire nous permettra ensuite  de vous proposer des lieux qui vous correspondent au mieux !
                 </Text>
                 <Text style={styles.textButton}>Une quinzaine de lieux apparaîtront à l'écran. Nous vous demander noter, pour chacun de 1 à 10, votre envie de le visiter.
-                    Dès que vous êtes prêt, cliquez sur le bouton ci-dessus pour commencer le questionnaire.
+                    Dès que vous êtes prêt, cliquez sur le bouton ci-dessous pour commencer le questionnaire.
                 </Text>
-                <Pressable style={[styles.button, {marginTop: 25}]} onPress={() => navigation.navigate('List')}>
+                <Pressable style={[styles.button, {marginTop: 25}]} onPress={() => navigation.navigate('WelcomeForm')}>
                     <Text style={styles.textButton}>Commencer</Text>
                 </Pressable>
             </View>
