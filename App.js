@@ -6,6 +6,7 @@ import NearbySearch from '../AIxplore/js/NearbySearch';
 import Register from '../AIxplore/js/Register';
 import WelcomePage from '../AIxplore/js/WelcomePage';
 import WelcomeForm from '../AIxplore/js/WelcomeForm';
+import Loading from '../AIxplore/js/Loading';
 import List from '../AIxplore/js/List';
 import RatingForm from '../AIxplore/js/RatingForm';
 import Filters from '../AIxplore/js/Filters';
@@ -21,6 +22,7 @@ function App() {
                 <Stack.Screen name="Register" component={Register} />
                 <Stack.Screen name="WelcomePage" component={WelcomePage} />
                 <Stack.Screen name="WelcomeForm" component={WelcomeForm} />
+                <Stack.Screen name="Loading" component={Loading} />
                 <Stack.Screen name="List" component={List} />
                 <Stack.Screen name="RatingForm" component={RatingForm} />
                 <Stack.Screen name="Filters" component={Filters} />
