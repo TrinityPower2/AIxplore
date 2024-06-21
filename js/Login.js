@@ -29,7 +29,7 @@ const LoginPage = ({ navigation }) => {
     };
 
     const handlePwd = () => {
-        navigation.navigate('List');
+        navigation.navigate('Home');
     };
 
     const handleRegister = () => {
