@@ -1,21 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Image, Text, TextInput, Pressable } from 'react-native';
-import { auth } from '../Firebase';
+import { auth, firestore } from '../Firebase';
 
 const RegisterPage = ({ navigation }) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleRegister = () => {
-        auth
-            .createUserWithEmailAndPassword(email, password)
-            .then(userCredentials => {
-                const user = userCredentials.user;
-                console.log(user.email);
-            })
-            .catch(error => alert(error.message))
-        navigation.navigate('Login');
+    const handleRegister = async () => {
+        try {
+            const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+
+            await firestore.collection('users').doc(user.uid).set({
+                email: user.email,
+                createdAt: new Date(),
+            });
+
+            console.log(`User registered with email: ${user.email}`);
+            navigation.navigate('Login');
+        } catch (error) {
+            alert(error.message);
+        }
     };
 
     return (

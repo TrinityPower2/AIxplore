@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Animated, StyleSheet, Text, TextInput, Button, Image, Pressable } from 'react-native';
+import { View, Animated, StyleSheet, Text, TextInput, Button, Image, Pressable, Alert } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
+import { auth, firestore } from '../Firebase';
 
 const LoginPage = ({ navigation }) => {
     const logoOpacity = useRef(new Animated.Value(0)).current;
     const logoMoveY = useRef(new Animated.Value(0)).current;
     const [showLogin, setShowLogin] = useState(false);
 
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     useEffect(() => {
@@ -24,12 +26,30 @@ const LoginPage = ({ navigation }) => {
         ]).start(() => setTimeout(() => setShowLogin(true), 500));
     }, [logoOpacity, logoMoveY]);
 
-    const handleLogin = () => {
-        navigation.navigate('NearbySearch');
+    const handleLogin = async () => {
+        try {
+            const userCredential = await auth.signInWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+            
+            const userDoc = await firestore.collection('users').doc(user.uid).get();
+            if (userDoc.exists) {
+                const userData = userDoc.data();
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 0,
+                        routes: [{ name: 'NearbySearch', params: { user: userData } }],
+                    })
+                );
+            } else {
+                Alert.alert('User not found in the database');
+            }
+        } catch (error) {
+            Alert.alert('Login failed', error.message);
+        }
     };
 
     const handlePwd = () => {
-        navigation.navigate('Home');
+        navigation.navigate('NearbySearch');
     };
 
     const handleRegister = () => {
@@ -44,8 +64,8 @@ const LoginPage = ({ navigation }) => {
                 <View style={styles.loginContainer}>
                     <CustomInput
                         imageSource={require('../assets/icon_username.png')}
-                        onChangeText={setUsername}
-                        value={username}
+                        onChangeText={setEmail}
+                        value={email}
                         placeholder="Email"
                     />
                     <CustomInput
