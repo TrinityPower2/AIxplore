@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TextInput, Pressable, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TextInput, Pressable, Alert, Dimensions } from 'react-native';
+
+const { width, height } = Dimensions.get('window');
 
 const ListPage = ({ route, navigation }) => {
-    //const { user } = route.params;
-
     const [city, setCity] = useState('');
 
     const data = [
@@ -16,8 +16,7 @@ const ListPage = ({ route, navigation }) => {
         { id: 7, name: "Seventh Place", detail: "Participant", image: require('../assets/icon_image.png') },
         { id: 8, name: "Eight Place", detail: "Participant", image: require('../assets/icon_image.png') },
         { id: 9, name: "Ninth Place", detail: "Participant", image: require('../assets/icon_image.png') },
-        { id: 10, name: "Tenth Place", detail: "Participant", image: require('../assets/icon_image.png') },
-        { id: 11, name: "Eleventh Place", detail: "Participant", image: require('../assets/icon_image.png') }
+        { id: 10, name: "Tenth Place", detail: "Participant", image: require('../assets/icon_image.png') }
     ];
 
     const getStyleForPosition = (position) => {
@@ -30,7 +29,6 @@ const ListPage = ({ route, navigation }) => {
     };
 
     const handleHome = () => {
-      //navigation.navigate('Home', { user });
       navigation.navigate('Home');
     };
 
@@ -53,44 +51,44 @@ const ListPage = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
-          <Image style={styles.logo} source={require('../assets/real_logo.png')} />
-          <Text style={styles.title}>Lieux à visiter</Text>
-          <View style={styles.cityContainer}>
-            <View style={{ flex: 1 }}>
-              <CustomInput
-                imageSource={require('../assets/icon_location.png')}
-                onChangeText={setCity}
-                value={city}
-                placeholder="Paris"
-              />
+            <View style={styles.topContainer}>
+                <Image style={styles.logo} source={require('../assets/real_logo.png')} />
+                <Image style={styles.iconProfil} source={require('../assets/icon_profil.png')} />
             </View>
-            <View style={{ marginLeft: 10 }}>
-              <Pressable onPress={() => navigation.navigate('Filters')}>
-                <View style={styles.iconBox}>
-                  <Image source={require('../assets/icon_filters.png')} style={[styles.icon, { marginLeft: 10 }]} />
+            <Text style={styles.title}>Liste des lieux à visiter</Text>
+            <View style={styles.cityContainer}>
+                <View style={{ flex: 1 }}>
+                    <CustomInput
+                        imageSource={require('../assets/icon_location.png')}
+                        onChangeText={setCity}
+                        value={city}
+                        placeholder="Paris"
+                    />
                 </View>
-              </Pressable>
+                <View style={{ marginLeft: 10 }}>
+                    <Pressable onPress={() => navigation.navigate('Filters')}>
+                        <View style={styles.iconBox}>
+                            <Image source={require('../assets/icon_filters.png')} style={[styles.icon, { marginLeft: 10 }]} />
+                        </View>
+                    </Pressable>
+                </View>
             </View>
-          </View>
     
-          <ScrollView style={styles.listContainer}>
-            {data.map((item, index) => (
-              <View key={item.id} style={[styles.item, getStyleForPosition(index + 1)]}>
-                <Image source={item.image} style={styles.itemImage}></Image>
-                <Text
-                  style={{ fontSize: getStyleForPosition(index + 1).fontSize, color: getStyleForPosition(index + 1).color }}
-                  onPress={() => createPopup(index)}>
-                  {item.name} - {item.detail}
-                </Text>
-              </View>
-            ))}
-          </ScrollView>
-          <Pressable onPress={handleHome} style={{ position: 'absolute', bottom: 20, left: 0, right: 0, alignItems: 'center' }}>
-            <Image style={styles.home} source={require('../assets/icon_home.png')} />
-          </Pressable>
+            <ScrollView style={styles.listContainer}>
+                {data.map((item, index) => (
+                    <View key={item.id} style={[styles.item, getStyleForPosition(index + 1)]}>
+                        <Image source={item.image} style={styles.itemImage}></Image>
+                        <Text
+                            style={{ fontSize: getStyleForPosition(index + 1).fontSize, color: getStyleForPosition(index + 1).color }}
+                            onPress={() => createPopup(index)}>
+                            {item.name} - {item.detail}
+                        </Text>
+                    </View>
+                ))}
+            </ScrollView>
         </View>
-      );
-    };
+    );
+};
 
 const CustomInput = ({ imageSource, onChangeText, value, placeholder }) => (
     <View style={styles.inputContainer}>
@@ -111,79 +109,90 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       backgroundColor: '#384454',
     },
+    topContainer: {
+        width: '100%',
+        height: height * 0.1,
+        backgroundColor: '#232B35',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        marginBottom: height * 0.03
+    },
     logo: {
-      marginTop: 20,
-      width: 225,
-      height: 225,
-      resizeMode: 'contain',
+        marginTop: "5%",
+        width: width * 0.3,
+        height: '100%',
+        resizeMode: 'contain',
+    },
+    iconProfil: {
+        marginTop: "5%",
+        width: width * 0.1,
+        height: width * 0.1,
+        resizeMode: 'contain',
     },
     title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      color: 'white',
-      marginTop: 10,
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: 'white',
+        marginTop: 10,
+        textAlign: 'center',
+        marginBottom: height * 0.03
     },
     cityContainer: {
-      marginTop: 10,
-      width: '80%',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#384454',
-      padding: 10,
-      flexDirection: 'row',
+        marginTop: 10,
+        width: '80%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
     },
     inputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderWidth: 1,
-      backgroundColor: '#FFFFFF',
-      borderRadius: 10,
-      padding: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 10,
+        padding: 10,
     },
     input: {
-      flex: 1,
-      height: 40,
-      textAlign: 'left',
-      color: '#000000',
+        flex: 1,
+        height: 40,
+        textAlign: 'left',
+        color: '#000000',
     },
     icon: {
-      width: 20,
-      height: 20,
-      marginRight: 10,
+        width: 20,
+        height: 20,
+        marginRight: 10,
     },
     iconBox: {
-      backgroundColor: '#ccc',
-      padding: 10,
-      borderRadius: 10,
-      borderWidth: 1,
-      borderColor: '#ccc',
+        backgroundColor: '#1abc9c',
+        padding: 10,
+        borderRadius: 10,
     },
     home: {
-      width: 75,
-      height: 75,
-      resizeMode: 'contain',
+        width: 50,
+        height: 50,
+        resizeMode: 'contain',
     },
     listContainer: {
-      width: '100%',
-      paddingVertical: 20,
-      paddingHorizontal: 20,
-      marginBottom: 130,
+        width: '100%',
+        paddingVertical: 20,
     },
     item: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      padding: 10,
-      marginVertical: 5,
-      marginHorizontal: 20,
-      borderRadius: 5,
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+        marginVertical: 5,
+        marginHorizontal: 20,
+        borderRadius: 5
     },
     itemImage: {
-      width: 50,
-      height: 50,
-      marginRight: 10,
-      resizeMode: 'contain',
+        width: 50,
+        height: 50,
+        marginRight: 10,
+        resizeMode: 'contain'
     },
-  });
-  
-  export default ListPage;
-  
+});
+
+export default ListPage;

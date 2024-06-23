@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, Image, Text, Pressable } from 'react-native';
+import { View, ScrollView, StyleSheet, Image, Text, Pressable, Dimensions } from 'react-native';
 import StarRating from 'react-native-star-rating-widget';
+
+const { width, height } = Dimensions.get('window');
 
 const RatingForm = ({ route, navigation }) => {
   const { placeName } = route.params;

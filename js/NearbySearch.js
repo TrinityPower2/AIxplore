@@ -6,6 +6,10 @@ import { auth } from '../Firebase';
 const NearbySearchPage = ({ route, navigation }) => {
     const { user } = route.params;
 
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [museums, setMuseums] = useState([]);
+
     const handleLogout = () => {
         auth.signOut().then(() => {
             navigation.dispatch(

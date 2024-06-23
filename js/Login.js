@@ -58,7 +58,7 @@ const LoginPage = ({ navigation }) => {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={styles.container}> 
             <Animated.Image source={require('../assets/real_logo.png')}
                 style={[styles.logo, { opacity: logoOpacity, transform: [{ translateY: logoMoveY }] }]} />
             {showLogin && (
@@ -123,6 +123,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#384454',
+    },
+    topContainer: {
+
     },
     logo: {
         width: 225,
