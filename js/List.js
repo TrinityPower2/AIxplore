@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TextInput, Pressable, Alert } from 'react-native';
 
-const ListPage = ({ navigation }) => {
+const ListPage = ({ route, navigation }) => {
+    //const { user } = route.params;
+
     const [city, setCity] = useState('');
 
     const data = [
@@ -28,7 +30,8 @@ const ListPage = ({ navigation }) => {
     };
 
     const handleHome = () => {
-        navigation.navigate('Login');
+      //navigation.navigate('Home', { user });
+      navigation.navigate('Home');
     };
 
     const goToNote = (index) => {

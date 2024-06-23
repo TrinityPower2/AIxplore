@@ -1,7 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Pressable, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, Alert, Button } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
+import { auth } from '../Firebase';
 
-const HomePage = ({ navigation }) => {
+const HomePage = ({ route, navigation }) => {
+    //const { user } = route.params;
+
     const handlePressButton1 = () => {
         Alert.alert(
             "Fonctionnalité à venir",
@@ -12,6 +16,7 @@ const HomePage = ({ navigation }) => {
     };
 
     const handlePressButton2 = () => {
+        //navigation.navigate('List', { user });
         navigation.navigate('List');
     };
 
@@ -22,6 +27,19 @@ const HomePage = ({ navigation }) => {
             [{ text: "OK", onPress: () => console.log("OK Pressed") }],
             { cancelable: true }
         );
+    };
+
+    const handleLogout = () => {
+        auth.signOut().then(() => {
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'Login' }],
+                })
+            );
+        }).catch((error) => {
+            console.error("Sign out error", error);
+        });
     };
 
     return (
@@ -43,6 +61,8 @@ const HomePage = ({ navigation }) => {
                     <Text style={styles.buttonText}>Paramètres</Text>
                 </Pressable>
             </View>
+            {/* <Text style={styles.text}>Welcome, {user ? user.email : 'Guest'}!</Text> */}
+            <Button title="Logout" onPress={handleLogout} />
         </View>
     );
 };

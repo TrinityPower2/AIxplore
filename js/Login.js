@@ -27,7 +27,7 @@ const LoginPage = ({ navigation }) => {
     }, [logoOpacity, logoMoveY]);
 
     const handleLogin = async () => {
-        try {
+        /*try {
             const userCredential = await auth.signInWithEmailAndPassword(email, password);
             const user = userCredential.user;
             
@@ -37,7 +37,7 @@ const LoginPage = ({ navigation }) => {
                 navigation.dispatch(
                     CommonActions.reset({
                         index: 0,
-                        routes: [{ name: 'NearbySearch', params: { user: userData } }],
+                        routes: [{ name: 'Home', params: { user: userData } }],
                     })
                 );
             } else {
@@ -45,7 +45,8 @@ const LoginPage = ({ navigation }) => {
             }
         } catch (error) {
             Alert.alert('Login failed', error.message);
-        }
+        }*/
+       navigation.navigate('Home');
     };
 
     const handlePwd = () => {
