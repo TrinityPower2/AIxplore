@@ -36,6 +36,7 @@ const ListPage = ({ route, navigation }) => {
         navigation.navigate('RatingForm', { placeName: data[index].name });
     };
 
+    /*
     const createPopup = (index) => {
         const item = data[index];
         Alert.alert(
@@ -47,6 +48,10 @@ const ListPage = ({ route, navigation }) => {
             ],
             { cancelable: true }
         );
+    };
+*/
+    const createPopup = (index) => {
+      navigation.navigate('InfoPopup', {placeID : index});
     };
 
     return (

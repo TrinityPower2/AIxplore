@@ -11,6 +11,7 @@ import List from '../AIxplore/js/List';
 import RatingForm from '../AIxplore/js/RatingForm';
 import Filters from '../AIxplore/js/Filters';
 import HomePage from './js/Home';
+import InfoPopup from './js/InfoPopup';
 
 const Stack = createNativeStackNavigator();
 
