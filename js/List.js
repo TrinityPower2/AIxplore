@@ -28,10 +28,6 @@ const ListPage = ({ route, navigation }) => {
         }
     };
 
-    const handleHome = () => {
-      navigation.navigate('Home');
-    };
-
     const goToNote = (index) => {
         navigation.navigate('RatingForm', { placeName: data[index].name });
     };
@@ -52,6 +48,32 @@ const ListPage = ({ route, navigation }) => {
 */
     const createPopup = (index) => {
       navigation.navigate('InfoPopup', {placeID : index});
+    };
+
+    const handleHisto = () => {
+        Alert.alert(
+            "Fonctionnalité à venir",
+            "Les profils ne sont pas encore implémentés",
+            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+            { cancelable: true }
+        );
+    };
+
+    const handleHome = () => {
+        navigation.navigate('Home');
+    };
+
+    const handleLogout = () => {
+        auth.signOut().then(() => {
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'Login' }],
+                })
+            );
+        }).catch((error) => {
+            console.error("Sign out error", error);
+        });
     };
 
     return (
@@ -91,6 +113,17 @@ const ListPage = ({ route, navigation }) => {
                     </View>
                 ))}
             </ScrollView>
+            <View style={styles.botContainer}>
+                <Pressable onPress={handleHisto}>
+                    <Image style={styles.iconHisto} source={require('../assets/icon_histo.png')} />
+                </Pressable>
+                <Pressable onPress={handleHome}>
+                    <Image style={styles.iconHome} source={require('../assets/icon_home.png')} />
+                </Pressable>
+                <Pressable onPress={handleLogout}>
+                    <Image style={styles.iconOut} source={require('../assets/icon_out.png')} />
+                </Pressable>
+            </View>
         </View>
     );
 };
@@ -110,31 +143,34 @@ const CustomInput = ({ imageSource, onChangeText, value, placeholder }) => (
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      alignItems: 'center',
-      backgroundColor: '#384454',
+        flex: 1,
+        backgroundColor: '#384454',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     topContainer: {
         width: '100%',
-        height: height * 0.1,
+        height: '18%',
         backgroundColor: '#232B35',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 20,
+        paddingVertical: 10,
+        marginTop: height * -0.07,
         marginBottom: height * 0.03
     },
     logo: {
-        marginTop: "5%",
         width: width * 0.3,
-        height: '100%',
+        height: height * 0.08,
         resizeMode: 'contain',
+        marginTop: height * 0.105
     },
     iconProfil: {
-        marginTop: "5%",
         width: width * 0.1,
         height: width * 0.1,
         resizeMode: 'contain',
+        marginTop: height * 0.105
     },
     title: {
         fontSize: 24,
@@ -182,7 +218,8 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         width: '100%',
-        paddingVertical: 20,
+        marginTop: height * 0.02,
+        marginBottom: height * 0.08
     },
     item: {
         flexDirection: 'row',
@@ -198,6 +235,30 @@ const styles = StyleSheet.create({
         marginRight: 10,
         resizeMode: 'contain'
     },
+    botContainer: {
+        width: '100%',
+        height: height * 0.08,
+        backgroundColor: '#232B35',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        position: 'absolute',
+        bottom: 0
+    },
+    iconHisto: {
+        width: width * 0.12,
+        height: width * 0.12,
+    },
+    iconHome: {
+        marginTop: height * 0.005,
+        width: width * 0.12,
+        height: width * 0.12,
+    },
+    iconOut: {
+        width: width * 0.12,
+        height: width * 0.12,
+    }
 });
 
 export default ListPage;

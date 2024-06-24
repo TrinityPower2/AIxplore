@@ -6,7 +6,7 @@ import { auth } from '../Firebase';
 
 const { width, height } = Dimensions.get('window');
 
-const HomePage = ({ route, navigation }) => {
+const HomePage2 = ({ route, navigation }) => {
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const opacityAnim = useRef(new Animated.Value(1)).current;
     const rotateAnim = useRef(new Animated.Value(0)).current;
@@ -68,7 +68,7 @@ const HomePage = ({ route, navigation }) => {
             })
         ]).start(() => {
             rotateAnim.setValue(0);
-            navigation.navigate('Home2');
+            navigation.navigate('Home');
         });
     };
 
@@ -106,17 +106,18 @@ const HomePage = ({ route, navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.topContainer}>
-                <Image style={styles.logo} source={require('../assets/real_logo.png')} />
-                <Image style={styles.iconProfil} source={require('../assets/icon_profil.png')} />
+                <Image style={styles.logo} source={require('../assets/real_logo2.png')} />
+                <Image style={styles.iconProfil} source={require('../assets/icon_profil2.png')} />
             </View>
             <View style={styles.mainContentContainer}>
                 <View style={styles.sloganContainer}>
                     <Text style={styles.slogan1}>AIxplorez</Text>
-                    <Text style={styles.slogan2}>SELON VOS ENVIES !!!</Text>
+                    <Text style={styles.slogan2}>EN DEHORS DE VOTRE</Text>
+                    <Text style={styles.slogan2}>ZONE DE CONFORT !!!</Text>
                 </View>
                 <View style={styles.logoContainer}>
                     <Pressable onPress={startAnimation}>
-                        <Animated.Image source={require('../assets/icon_location.png')}
+                        <Animated.Image source={require('../assets/icon_location2.png')}
                             style={[styles.search,
                                 {
                                     transform: [{ scale: scaleAnim }],
@@ -127,18 +128,18 @@ const HomePage = ({ route, navigation }) => {
             </View>
             <View style={styles.changeContainer}>
                     <Pressable onPress={handleChange}>
-                        <Animated.Image style={[styles.change, { transform: [{ rotate: rotation }] }]} source={require('../assets/icon_uzumaki.png')} />
+                        <Animated.Image style={[styles.change, { transform: [{ rotate: rotation }] }]} source={require('../assets/icon_uzumaki2.png')} />
                     </Pressable>
                 </View>
             <View style={styles.botContainer}>
                 <Pressable onPress={handleHisto}>
-                    <Image style={styles.iconHisto} source={require('../assets/icon_histo.png')} />
+                    <Image style={styles.iconHisto} source={require('../assets/icon_histo2.png')} />
                 </Pressable>
                 <Pressable onPress={handleHome}>
-                    <Image style={styles.iconHome} source={require('../assets/icon_home.png')} />
+                    <Image style={styles.iconHome} source={require('../assets/icon_home2.png')} />
                 </Pressable>
                 <Pressable onPress={handleLogout}>
-                    <Image style={styles.iconOut} source={require('../assets/icon_out.png')} />
+                    <Image style={styles.iconOut} source={require('../assets/icon_out2.png')} />
                 </Pressable>
             </View>
         </SafeAreaView>
@@ -244,4 +245,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default HomePage;
+export default HomePage2;

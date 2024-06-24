@@ -12,6 +12,7 @@ import RatingForm from '../AIxplore/js/RatingForm';
 import Filters from '../AIxplore/js/Filters';
 import HomePage from './js/Home';
 import InfoPopup from './js/InfoPopup';
+import HomePage2 from '../AIxplore/js/Home2';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,7 @@ function App() {
                 <Stack.Screen name="Filters" component={Filters} />
                 <Stack.Screen name="Home" component={HomePage} />
                 <Stack.Screen name="InfoPopup" component={InfoPopup} />
+                <Stack.Screen name="Home2" component={HomePage2} />
             </Stack.Navigator>
         </NavigationContainer>
     );
