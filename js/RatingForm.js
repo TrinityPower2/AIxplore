@@ -4,6 +4,7 @@ import StarRating from 'react-native-star-rating-widget';
 import { URL_API } from '../Variable';
 import { CommonActions } from '@react-navigation/native';
 
+
 const { width, height } = Dimensions.get('window');
 
 const RatingForm = ({ route, navigation }) => {
@@ -19,6 +20,7 @@ const RatingForm = ({ route, navigation }) => {
 
   const sendRatingToServer = async (text) => {
     const API_URL = URL_API + 'rating';
+    console.log(JSON.stringify({"crit1": text[0], "crit2": text[1], "crit3": text[2], "crit4": text[3], "noteGlobale": text[noteFinale], "placeID": placeID, "uid": user.uid}))
 
     try {
         const response = await fetch(API_URL, {
