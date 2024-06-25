@@ -73,12 +73,7 @@ const HomePage2 = ({ route, navigation }) => {
     };
 
     const handleHisto = () => {
-        Alert.alert(
-            "Fonctionnalité à venir",
-            "Les profils ne sont pas encore implémentés",
-            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
-            { cancelable: true }
-        );
+        navigation.navigate('History');
     };
 
     const handleHome = () => {

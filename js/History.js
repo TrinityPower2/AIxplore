@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TextInput, Pressable, Alert, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, Pressable, Alert, Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-const ListPage = ({ route, navigation }) => {
-    const [city, setCity] = useState('');
+const HistoryPage = ({ route, navigation }) => {
 
     const data = [
         { id: 1, name: "First Place", detail: "Gold", image: require('../assets/icon_image.png') },
@@ -19,25 +18,23 @@ const ListPage = ({ route, navigation }) => {
         { id: 10, name: "Tenth Place", detail: "Participant", image: require('../assets/icon_image.png') }
     ];
 
-    const getStyleForPosition = (position) => {
-        switch(position) {
-            case 1: return { backgroundColor: 'gold', fontSize: 24, color: 'black' };
-            case 2: return { backgroundColor: 'silver', fontSize: 20, color: 'black' };
-            case 3: return { backgroundColor: '#c87533', fontSize: 18, color: 'black' };
-            default: return { backgroundColor: 'white', fontSize: 16, color: 'black' };
-        }
+
+    const getStyleForNotation = () => {
+        return { backgroundColor: 'white', fontSize: 16, color: 'black' };
+        // nouvelle couleur pour les lieux notés ?
     };
 
     const goToNote = (index) => {
         navigation.navigate('RatingForm', { placeName: data[index].name });
     };
 
-    const createPopup = (index) => {
-      navigation.navigate('InfoPopup', {placeID : index});
-    };
-
     const handleHisto = () => {
-        navigation.navigate('History');
+        Alert.alert(
+            "",
+            "Vous êtes déjà dans votre historique !",
+            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+            { cancelable: true }
+        );
     };
 
     const handleHome = () => {
@@ -63,37 +60,25 @@ const ListPage = ({ route, navigation }) => {
                 <Image style={styles.logo} source={require('../assets/real_logo.png')} />
                 <Image style={styles.iconProfil} source={require('../assets/icon_profil.png')} />
             </View>
-            <Text style={styles.title}>Liste des lieux à visiter</Text>
-            <View style={styles.cityContainer}>
-                <View style={{ flex: 1 }}>
-                    <CustomInput
-                        imageSource={require('../assets/icon_location.png')}
-                        onChangeText={setCity}
-                        value={city}
-                        placeholder="Paris"
-                    />
-                </View>
-                <View style={{ marginLeft: 10 }}>
-                    <Pressable onPress={() => navigation.navigate('Filters')}>
-                        <View style={styles.iconBox}>
-                            <Image source={require('../assets/icon_filters.png')} style={[styles.icon, { marginLeft: 10 }]} />
-                        </View>
-                    </Pressable>
-                </View>
-            </View>
+            <Text style={styles.title}>Historique de vos lieux</Text>
+            
     
             <ScrollView style={styles.listContainer}>
                 {data.map((item, index) => (
-                    <View key={item.id} style={[styles.item, getStyleForPosition(index + 1)]}>
+                    <View key={item.id} style={[styles.item, getStyleForNotation()]}>
                         <Image source={item.image} style={styles.itemImage}></Image>
                         <Text
-                            style={{ fontSize: getStyleForPosition(index + 1).fontSize, color: getStyleForPosition(index + 1).color }}
-                            onPress={() => createPopup(index)}>
+                            style={{ fontSize: getStyleForNotation().fontSize, color: getStyleForNotation().color }}
+                        >
                             {item.name} - {item.detail}
                         </Text>
+                        <Pressable onPress={() => goToNote(index)} style={styles.noteButton}>
+                            <Text style={styles.noteButtonText}>Noter</Text>
+                        </Pressable>
                     </View>
                 ))}
             </ScrollView>
+
             <View style={styles.botContainer}>
                 <Pressable onPress={handleHisto}>
                     <Image style={styles.iconHisto} source={require('../assets/icon_histo.png')} />
@@ -109,18 +94,6 @@ const ListPage = ({ route, navigation }) => {
     );
 };
 
-const CustomInput = ({ imageSource, onChangeText, value, placeholder }) => (
-    <View style={styles.inputContainer}>
-        <Image source={imageSource} style={styles.icon} />
-        <TextInput
-            style={styles.input}
-            onChangeText={onChangeText}
-            value={value}
-            placeholder={placeholder}
-            underlineColorAndroid="transparent"
-        />
-    </View>
-);
 
 const styles = StyleSheet.create({
     container: {
@@ -161,13 +134,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: height * 0.03
     },
-    cityContainer: {
-        marginTop: 10,
-        width: '80%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'row',
-    },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -202,13 +168,25 @@ const styles = StyleSheet.create({
         marginTop: height * 0.02,
         marginBottom: height * 0.08
     },
-    item: {
+    noteButton: {
+        backgroundColor: '#5db9f8',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 10,
+        marginLeft: 'auto',
+    },
+      noteButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+      item: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
         marginVertical: 5,
         marginHorizontal: 20,
-        borderRadius: 5
+        borderRadius: 5,
+        justifyContent: 'space-between',
     },
     itemImage: {
         width: 50,
@@ -242,4 +220,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ListPage;
+export default HistoryPage;
