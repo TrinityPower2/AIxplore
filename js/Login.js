@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Animated, StyleSheet, Text, TextInput, Button, Image, Pressable, Alert } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import { auth, firestore } from '../Firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginPage = ({ navigation }) => {
     const logoOpacity = useRef(new Animated.Value(0)).current;
@@ -27,26 +28,23 @@ const LoginPage = ({ navigation }) => {
     }, [logoOpacity, logoMoveY]);
 
     const handleLogin = async () => {
-        /*try {
-            const userCredential = await auth.signInWithEmailAndPassword(email, password);
-            const user = userCredential.user;
-            
-            const userDoc = await firestore.collection('users').doc(user.uid).get();
-            if (userDoc.exists) {
-                const userData = userDoc.data();
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                Alert.alert(`User Email: ${user.uid}`);
                 navigation.dispatch(
                     CommonActions.reset({
                         index: 0,
-                        routes: [{ name: 'Home', params: { user: userData } }],
+                        routes: [{ name: 'Home', params: { user: user } }],
                     })
                 );
-            } else {
-                Alert.alert('User not found in the database');
-            }
-        } catch (error) {
-            Alert.alert('Login failed', error.message);
-        }*/
-       navigation.navigate('Home');
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode, errorMessage);
+                Alert("LOGIN FAILED");
+            })
     };
 
     const handlePwd = () => {

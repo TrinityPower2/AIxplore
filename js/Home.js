@@ -7,6 +7,25 @@ import { auth } from '../Firebase';
 const { width, height } = Dimensions.get('window');
 
 const HomePage = ({ route, navigation }) => {
+    const { user } = route.params;
+
+    const sendStringToServer = async (text) => {
+        const API_URL = URL_API + 'register';
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({"uid": text}),
+            });
+            response.json();
+        } catch (error) {
+            console.error('Error sending data to server:', error);
+        }
+    };
+
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const opacityAnim = useRef(new Animated.Value(1)).current;
     const rotateAnim = useRef(new Animated.Value(0)).current;
@@ -73,7 +92,14 @@ const HomePage = ({ route, navigation }) => {
     };
 
     const handleHisto = () => {
-        navigation.navigate('History');
+        sendStringToServer(user.uid);
+        Alert.alert(`User Email: ${user.uid}`);
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'History', params: { user: user } }],
+            })
+        );
     };
 
     const handleHome = () => {

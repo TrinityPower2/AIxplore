@@ -1,32 +1,52 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Image, Text, TextInput, Pressable } from 'react-native';
-import { auth, firestore } from '../Firebase';
+import { auth } from '../Firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { URL_API } from '../Variable';
 
 const RegisterPage = ({ navigation }) => {
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [inputText, setInputText] = useState('');
+
+    const sendStringToServer = async (text) => {
+        const API_URL = URL_API + 'register';
+
+        console.log(JSON.stringify({"uid": text}))
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({"uid": text}),
+            });
+            response.json();
+        } catch (error) {
+            console.error('Error sending data to server:', error);
+        }
+    };
 
     const handleRegister = async () => {
         try {
-            const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-            const user = userCredential.user;
-
-            await firestore.collection('users').doc(user.uid).set({
-                email: user.email,
-                createdAt: new Date(),
-            });
-
-            console.log(`User registered with email: ${user.email}`);
-            navigation.navigate('Login');
+            await createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    console.log(user.uid)
+                    sendStringToServer(user.uid);
+                    navigation.navigate('Login');
+                });
         } catch (error) {
-            alert(error.message);
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            alert(`ERROR: ${errorMessage}`);
         }
     };
 
     return (
         <View style={styles.container}>
-            <Image style={styles.logo} source={require('../assets/real_logo.png')}></Image>
+            <Image style={styles.logo} source={require('../assets/real_logo.png')} />
             <View style={styles.registerContainer}>
                 <CustomInput
                     imageSource={require('../assets/icon_username.png')}

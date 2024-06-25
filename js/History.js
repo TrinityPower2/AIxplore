@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, Pressable, Alert, Dimensions } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
 const HistoryPage = ({ route, navigation }) => {
+    const { user } = route.params;
 
     const data = [
         { id: 1, name: "First Place", detail: "Gold", image: require('../assets/icon_image.png') },
@@ -25,7 +27,14 @@ const HistoryPage = ({ route, navigation }) => {
     };
 
     const goToNote = (index) => {
-        navigation.navigate('RatingForm', { placeName: data[index].name });
+        Alert.alert(`User Email: ${user.uid}`);
+        //navigation.navigate('RatingForm', { placeName: data[index].name });
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'RatingForm', params: { user: user, placeID: 0, placeName: data[index].name}}],
+            })
+        );
     };
 
     const handleHisto = () => {
