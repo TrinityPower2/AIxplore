@@ -103,7 +103,12 @@ const HomePage = ({ route, navigation }) => {
     };
 
     const handleHome = () => {
-        navigation.navigate('Home');
+        Alert.alert(
+            "",
+            "Vous êtes déjà au menu principal !",
+            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+            { cancelable: true }
+        );
     };
 
     const handleLogout = () => {

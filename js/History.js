@@ -1,11 +1,46 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, Pressable, Alert, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, Pressable, Alert, Dimensions, ActivityIndicator } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
+import { URL_API } from '../Variable';
 
 const { width, height } = Dimensions.get('window');
 
 const HistoryPage = ({ route, navigation }) => {
     const { user } = route.params;
+    const [loading, setLoading] = useState(true); // État de chargement
+    const [data2, setData2] = useState([]); // État pour les données récupérées depuis le serveur
+
+    useEffect(() => {
+        const sendStringToServer = async (text) => {
+            const API_URL = URL_API + 'historique';
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "uid": text }),
+                });
+
+                const data = await response.json();
+                console.log('Received data:', data);
+
+                setData2(data["historique"]); 
+                setLoading(false); 
+
+            } catch (error) {
+                console.error('Error sending data to server:', error);
+                setLoading(false); 
+                Alert.alert('Erreur', `Erreur lors du chargement des données: ${error.message}`);
+            }
+        };
+
+        sendStringToServer(user.uid);
+
+    }, [user.uid]); 
+
+
 
     const data = [
         { id: 1, name: "First Place", detail: "Gold", image: require('../assets/icon_image.png') },
@@ -32,7 +67,7 @@ const HistoryPage = ({ route, navigation }) => {
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
-                routes: [{ name: 'RatingForm', params: { user: user, placeID: 0, placeName: data[index].name}}],
+                routes: [{ name: 'RatingForm', params: { user: user, placeID: data2[index].lieu_id, placeName: data2[index].name}}],
             })
         );
     };
@@ -47,7 +82,12 @@ const HistoryPage = ({ route, navigation }) => {
     };
 
     const handleHome = () => {
-        navigation.navigate('Home');
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Home', params: { user: user } }],
+            })
+        );
     };
 
     const handleLogout = () => {
@@ -63,6 +103,9 @@ const HistoryPage = ({ route, navigation }) => {
         });
     };
 
+    
+
+
     return (
         <View style={styles.container}>
             <View style={styles.topContainer}>
@@ -73,13 +116,13 @@ const HistoryPage = ({ route, navigation }) => {
             
     
             <ScrollView style={styles.listContainer}>
-                {data.map((item, index) => (
+                {data2.map((item, index) => (
                     <View key={item.id} style={[styles.item, getStyleForNotation()]}>
-                        <Image source={item.image} style={styles.itemImage}></Image>
+                        <Image source={{ uri: item.image }} style={styles.itemImage}></Image>
                         <Text
                             style={{ fontSize: getStyleForNotation().fontSize, color: getStyleForNotation().color }}
                         >
-                            {item.name} - {item.detail}
+                            {item.name}
                         </Text>
                         <Pressable onPress={() => goToNote(index)} style={styles.noteButton}>
                             <Text style={styles.noteButtonText}>Noter</Text>
@@ -101,7 +144,9 @@ const HistoryPage = ({ route, navigation }) => {
             </View>
         </View>
     );
+
 };
+
 
 
 const styles = StyleSheet.create({

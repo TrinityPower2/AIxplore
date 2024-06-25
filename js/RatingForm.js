@@ -43,7 +43,12 @@ const RatingForm = ({ route, navigation }) => {
     console.log(placeID)
     console.log(placeName)
     sendRatingToServer(ratings)
-    navigation.navigate('List');
+    navigation.dispatch(
+      CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'History', params: { user: user } }],
+      })
+  );
   };
 
   const handleHisto = () => {
