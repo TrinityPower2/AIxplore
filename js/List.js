@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TextInput, Pressable, Alert, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TextInput, Pressable, Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -26,10 +26,6 @@ const ListPage = ({ route, navigation }) => {
             case 3: return { backgroundColor: '#c87533', fontSize: 18, color: 'black' };
             default: return { backgroundColor: 'white', fontSize: 16, color: 'black' };
         }
-    };
-
-    const goToNote = (index) => {
-        navigation.navigate('RatingForm', { placeName: data[index].name });
     };
 
     const createPopup = (index) => {
@@ -191,11 +187,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#1abc9c',
         padding: 10,
         borderRadius: 10,
-    },
-    home: {
-        width: 50,
-        height: 50,
-        resizeMode: 'contain',
     },
     listContainer: {
         width: '100%',
