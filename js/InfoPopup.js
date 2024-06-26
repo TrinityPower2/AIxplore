@@ -127,7 +127,7 @@ const InfoPopup = ({ route, navigation }) => {
             </View>
 
             <View style={styles.contentContainer} >
-                <Image style={styles.placePicture} source={defaultImage ? { uri: data2.image } : defaultImage} />
+                <Image style={styles.placePicture} source={data2.image ? { uri: data2.image } : defaultImage } />
                 <Text style={styles.placeName}>{data2.nom}</Text>
                 <Text style={styles.description}>{data2.description}</Text>
             </View>

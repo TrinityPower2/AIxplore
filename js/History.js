@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, Pressable, Alert, Dimensions, ActivityIndicator } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import { URL_API } from '../Variable';
+import defaultImage from '../assets/icon_image.png';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -124,7 +126,7 @@ const HistoryPage = ({ route, navigation }) => {
             <ScrollView style={styles.listContainer}>
                 {data2.map((item, index) => (
                     <View key={item.id} style={[styles.item, getStyleForNotation()]}>
-                        <Image source={{ uri: item.image }} style={styles.itemImage}></Image>
+                        <Image source={item.image ? { uri: item.image } : defaultImage } style={styles.itemImage}></Image>
                         <Text
                             style={{ fontSize: getStyleForNotation().fontSize, color: getStyleForNotation().color }}
                         >

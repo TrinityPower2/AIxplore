@@ -141,7 +141,7 @@ const ListPage = ({ route, navigation }) => {
             <ScrollView style={styles.listContainer}>
                 {data2.map((item, index) => (
                     <View key={item.id} style={[styles.item, getStyleForPosition(index + 1)]}>
-                        <Image source={item.image ? { uri: item.image } : defaultImage} style={styles.itemImage}></Image>
+                        <Image source={item.image ? { uri: item.image } : defaultImage } style={styles.itemImage}></Image>
                         <Text
                             style={{ fontSize: getStyleForPosition(index + 1).fontSize, color: getStyleForPosition(index + 1).color }}
                             onPress={() => createPopup(index)}>
