@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, Alert, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, Alert, Dimensions, Modal, Button } from 'react-native';
 import StarRating from 'react-native-star-rating-widget';
+import MapView, { Marker } from 'react-native-maps';
+import { CommonActions } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -21,11 +23,13 @@ const InfoPopup = ({ route, navigation }) => {
       { id: 11, name: "Eleventh Place", detail: "Participant", image: require('../assets/icon_image.png'), description: "11th place description", rating: 0 }
   ];
 
+    const [modalVisible, setModalVisible] = useState(false);
+
     const handleInfoPress = () => {
         Alert.alert(
             "Contact",
             "Les infos de contact seront ici",
-            [{ text: "Itinéraine", onPress: () => console.log("Itinéraires Pressed") }],
+            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
             { cancelable: true }
         );
     };
@@ -41,7 +45,12 @@ const InfoPopup = ({ route, navigation }) => {
   };
 
   const handleHome = () => {
-      navigation.navigate('Home');
+    navigation.dispatch(
+      CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Home', params: { user: user } }],
+      })
+  );
   };
 
   const handleLogout = () => {
@@ -69,9 +78,49 @@ const InfoPopup = ({ route, navigation }) => {
                 <Text style={styles.placeName}>{data[placeID].name}</Text>
                 <Text style={styles.description}>{data[placeID].description}</Text>
             </View>
-            <Pressable style={styles.infoButton} onPress={handleInfoPress}>
-                <Text style={styles.buttonText}>Infos</Text>
-            </Pressable>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '80%' }}>
+                <Pressable style={[styles.infoButton, { marginRight: 5 }]} onPress={handleInfoPress}>
+                    <Text style={styles.buttonText}>Infos</Text>
+                </Pressable>
+                <Pressable style={[styles.infoButton, { marginLeft: 5 }]} onPress={() => setModalVisible(true)}>
+                    <Text style={styles.buttonText}>Carte</Text>
+                </Pressable>
+            </View>
+
+            
+            <Modal
+              animationType="slide"
+              transparent={false}
+              visible={modalVisible}
+              onRequestClose={() => {
+                setModalVisible(false);
+              }}
+            >
+              <View style={styles.modalContainer}>
+                <MapView
+                  style={styles.map}
+                  region={{
+                    latitude: 37.78825,
+                    longitude: -122.4324,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                  }}
+                >
+                  <Marker
+                    coordinate={{
+                      latitude: 37.78825,
+                      longitude: -122.4324,
+                    }}
+                    title={'Place Name'}
+                    description={'This is the place you are looking for'}
+                  />
+                </MapView>
+                <Pressable style={styles.mapButton} onPress={() => setModalVisible(false)}>
+                    <Text style={styles.buttonText}>Retour</Text>
+                </Pressable>
+              </View>
+            </Modal>
             
             <Text style={styles.ratingText}>Note globale : {data[placeID].rating}/5</Text>
             <StarRating
@@ -107,7 +156,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#384454',
-    // justifyContent: 'center',
     alignItems: 'center',
   },
   topContainer: {
@@ -174,6 +222,20 @@ const styles = StyleSheet.create({
       marginVertical: 25,
       width: '40%',
     },
+    modalContainer: {
+      flex: 1,
+    },
+    map: {
+      width: "100%",
+      height: "95%",
+    },
+    mapButton: {
+      backgroundColor: '#5db9f8',
+      padding: 12,
+      alignItems: 'center',
+      marginTop: -5,
+      width: '100%',
+    },
     ratingContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
@@ -194,7 +256,7 @@ const styles = StyleSheet.create({
       padding: 12,
       borderRadius: 10,
       alignItems: 'center',
-      marginTop: 30,
+      marginTop: 20,
       width: '40%',
     },
     buttonText: {
