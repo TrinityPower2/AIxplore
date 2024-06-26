@@ -1,3 +1,3 @@
-const URL_API = 'http://16.16.104.19/';
+const URL_API = 'http://13.50.111.154/';
 
 export { URL_API };

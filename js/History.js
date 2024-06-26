@@ -103,8 +103,14 @@ const HistoryPage = ({ route, navigation }) => {
         });
     };
 
-    
-
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
+ 
 
     return (
         <View style={styles.container}>

@@ -64,7 +64,12 @@ const HomePage = ({ route, navigation }) => {
         ).start();
 
         setTimeout(() => {
-            navigation.navigate('List');
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'List', params: { user: user } }],
+                })
+            );
         }, 4500); 
     };
 

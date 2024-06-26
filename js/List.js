@@ -1,23 +1,60 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TextInput, Pressable, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, TextInput, Pressable, Dimensions, ActivityIndicator, Alert } from 'react-native';
+import * as Location from 'expo-location';
+import { CommonActions } from '@react-navigation/native';
+import { URL_API } from '../Variable';
+import defaultImage from '../assets/icon_image.png';
 
 const { width, height } = Dimensions.get('window');
 
 const ListPage = ({ route, navigation }) => {
     const [city, setCity] = useState('');
+    const { user } = route.params;
+    const [loading, setLoading] = useState(true); // État de chargement
+    const [data2, setData2] = useState([]); // État pour les données récupérées depuis le serveur
 
-    const data = [
-        { id: 1, name: "First Place", detail: "Gold", image: require('../assets/icon_image.png') },
-        { id: 2, name: "Second Place", detail: "Silver", image: require('../assets/icon_image.png') },
-        { id: 3, name: "Third Place", detail: "Copper", image: require('../assets/icon_image.png') },
-        { id: 4, name: "Fourth Place", detail: "Participant", image: require('../assets/icon_image.png') },
-        { id: 5, name: "Fifth Place", detail: "Participant", image: require('../assets/icon_image.png') },
-        { id: 6, name: "Sixth Place", detail: "Participant", image: require('../assets/icon_image.png') },
-        { id: 7, name: "Seventh Place", detail: "Participant", image: require('../assets/icon_image.png') },
-        { id: 8, name: "Eight Place", detail: "Participant", image: require('../assets/icon_image.png') },
-        { id: 9, name: "Ninth Place", detail: "Participant", image: require('../assets/icon_image.png') },
-        { id: 10, name: "Tenth Place", detail: "Participant", image: require('../assets/icon_image.png') }
-    ];
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
+            }
+            let loc = await Location.getCurrentPositionAsync({});
+            setLocation(loc);
+        })();
+    }, []);
+
+    useEffect(() => {
+        if (location) {
+            sendLocationToServer(user.uid, location.coords.latitude, location.coords.longitude);
+        }
+    }, [location]);
+
+    const sendLocationToServer = async (uid, lat, long) => {
+        const API_URL = `${URL_API}recommandation`;
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "uid": uid, "lat": lat, "long": long }),
+            });
+
+            const data = await response.json();
+            console.log(data)
+            setData2(data["recommandation"]);
+        } catch (error) {
+            console.error('Error sending data to server:', error);
+            Alert.alert('Erreur', `Erreur lors du chargement des données: ${error.message}`);
+        } finally {
+            setLoading(false); 
+        }
+    };
 
     const getStyleForPosition = (position) => {
         switch(position) {
@@ -29,15 +66,25 @@ const ListPage = ({ route, navigation }) => {
     };
 
     const createPopup = (index) => {
-      navigation.navigate('InfoPopup', {placeID : index});
+        navigation.navigate('InfoPopup', {placeID : index});
     };
 
     const handleHisto = () => {
-        navigation.navigate('History');
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'History' }],
+            })
+        );
     };
 
     const handleHome = () => {
-        navigation.navigate('Home');
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Home' }],
+            })
+        );
     };
 
     const handleLogout = () => {
@@ -52,6 +99,14 @@ const ListPage = ({ route, navigation }) => {
             console.error("Sign out error", error);
         });
     };
+
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -79,13 +134,13 @@ const ListPage = ({ route, navigation }) => {
             </View>
     
             <ScrollView style={styles.listContainer}>
-                {data.map((item, index) => (
+                {data2.map((item, index) => (
                     <View key={item.id} style={[styles.item, getStyleForPosition(index + 1)]}>
-                        <Image source={item.image} style={styles.itemImage}></Image>
+                        <Image source={item.image ? { uri: item.image } : defaultImage} style={styles.itemImage}></Image>
                         <Text
                             style={{ fontSize: getStyleForPosition(index + 1).fontSize, color: getStyleForPosition(index + 1).color }}
                             onPress={() => createPopup(index)}>
-                            {item.name} - {item.detail}
+                            {item.name}
                         </Text>
                     </View>
                 ))}
@@ -230,7 +285,12 @@ const styles = StyleSheet.create({
     iconOut: {
         width: width * 0.12,
         height: width * 0.12,
-    }
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });
 
 export default ListPage;
