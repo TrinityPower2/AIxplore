@@ -20,7 +20,7 @@ const RatingForm = ({ route, navigation }) => {
 
   const sendRatingToServer = async (text) => {
     const API_URL = URL_API + 'rating';
-    console.log(JSON.stringify({"crit1": text[0], "crit2": text[1], "crit3": text[2], "crit4": text[3], "noteGlobale": text[noteFinale], "placeID": placeID, "uid": user.uid}))
+    console.log(JSON.stringify({"crit1": text[0], "crit2": text[1], "crit3": text[2], "crit4": text[3], "noteGlobale": text[4], "placeID": placeID, "uid": user.uid}))
 
     try {
         const response = await fetch(API_URL, {
@@ -28,7 +28,7 @@ const RatingForm = ({ route, navigation }) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({"crit1": text[0], "crit2": text[1], "crit3": text[2], "crit4": text[3], "noteGlobale": text[noteFinale], "placeID": placeID, "uid": user.uid}),
+            body: JSON.stringify({"crit1": text[0], "crit2": text[1], "crit3": text[2], "crit4": text[3], "noteGlobale": text[4], "placeID": placeID, "uid": user.uid}),
         });
         response.json();
     } catch (error) {
