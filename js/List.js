@@ -66,14 +66,19 @@ const ListPage = ({ route, navigation }) => {
     };
 
     const createPopup = (index) => {
-        navigation.navigate('InfoPopup', {placeID : index});
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'InfoPopup', params: { user: user, placeID: data2[index].lieu_id } }],
+            })
+        );
     };
 
     const handleHisto = () => {
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
-                routes: [{ name: 'History' }],
+                routes: [{ name: 'History', params: { user: user } }],
             })
         );
     };
@@ -82,7 +87,7 @@ const ListPage = ({ route, navigation }) => {
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
-                routes: [{ name: 'Home' }],
+                routes: [{ name: 'Home', params: { user: user } }],
             })
         );
     };
