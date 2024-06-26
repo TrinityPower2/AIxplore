@@ -1,13 +1,52 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, Alert, Dimensions, Modal, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, Pressable, Alert, Dimensions, Modal, Button, ActivityIndicator  } from 'react-native';
 import StarRating from 'react-native-star-rating-widget';
 import MapView, { Marker } from 'react-native-maps';
 import { CommonActions } from '@react-navigation/native';
+import { URL_API } from '../Variable';
+import defaultImage from '../assets/icon_image.png';
+
 
 const { width, height } = Dimensions.get('window');
 
 const InfoPopup = ({ route, navigation }) => {
-    const { placeID } = route.params;
+  const { user } = route.params;
+  const { placeID } = route.params;
+  const { id_classement } = route.params;
+
+  const [loading, setLoading] = useState(true); // État de chargement
+  const [data2, setData2] = useState([]); // État pour les données récupérées depuis le serveur
+
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+
+  useEffect(() => {
+    sendLocationToServer(user.uid, placeID);
+  }, [placeID]);
+
+  const sendLocationToServer = async (uid, placeID) => {
+    const API_URL = URL_API + 'informations';
+
+      try {
+          const response = await fetch(API_URL, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ "uid": uid, "placeID":placeID}),
+          });
+
+          const data = await response.json();
+          console.log(data)
+          setData2(data["informations"]);
+      } catch (error) {
+          console.error('Error sending data to server:', error);
+          Alert.alert('Erreur', `Erreur lors du chargement des données: ${error.message}`);
+      } finally {
+          setLoading(false); 
+      }
+  };
 
     const data = [
       { id: 1, name: "First Place", detail: "Gold", image: require('../assets/icon_image.png'), description: "1st place description", rating: 5 },
@@ -28,7 +67,8 @@ const InfoPopup = ({ route, navigation }) => {
     const handleInfoPress = () => {
         Alert.alert(
             "Contact",
-            "Les infos de contact seront ici",
+            data2.telephone,
+            data2.horaires
             [{ text: "OK", onPress: () => console.log("OK Pressed") }],
             { cancelable: true }
         );
@@ -41,7 +81,12 @@ const InfoPopup = ({ route, navigation }) => {
     };
 
     const handleHisto = () => {
-      navigation.navigate('History');
+      navigation.dispatch(
+        CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'History', params: { user: user } }],
+        })
+    );
   };
 
   const handleHome = () => {
@@ -66,6 +111,14 @@ const InfoPopup = ({ route, navigation }) => {
       });
   };;
 
+  if (loading) {
+    return (
+        <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+    );
+}
+
     return (
         <View style={styles.container}>
             <View style={styles.topContainer}>
@@ -74,9 +127,9 @@ const InfoPopup = ({ route, navigation }) => {
             </View>
 
             <View style={styles.contentContainer} >
-                <Image style={styles.placePicture} source={data[placeID].image} />
-                <Text style={styles.placeName}>{data[placeID].name}</Text>
-                <Text style={styles.description}>{data[placeID].description}</Text>
+                <Image style={styles.placePicture} source={defaultImage ? { uri: data2.image } : defaultImage} />
+                <Text style={styles.placeName}>{data2.nom}</Text>
+                <Text style={styles.description}>{data2.description}</Text>
             </View>
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '80%' }}>
@@ -122,12 +175,12 @@ const InfoPopup = ({ route, navigation }) => {
               </View>
             </Modal>
             
-            <Text style={styles.ratingText}>Note globale : {data[placeID].rating}/5</Text>
+            <Text style={styles.ratingText}>Note globale : {data[1].rating}/5</Text>
             <StarRating
                 color="#5db9f8"
                 emptyColor="#FFFFFF"
                 size={40}
-                rating={data[placeID].rating}
+                rating={data[1].rating}
                 onChange={doNothing}
                 enableSwiping={false}
                 style={styles.ratingContainer}

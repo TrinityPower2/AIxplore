@@ -35,7 +35,7 @@ const ListPage = ({ route, navigation }) => {
     }, [location]);
 
     const sendLocationToServer = async (uid, lat, long) => {
-        const API_URL = `${URL_API}recommandation`;
+        const API_URL = URL_API + 'recommandation';
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',
@@ -69,7 +69,7 @@ const ListPage = ({ route, navigation }) => {
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
-                routes: [{ name: 'InfoPopup', params: { user: user, placeID: data2[index].lieu_id } }],
+                routes: [{ name: 'InfoPopup', params: { user: user, id_classement:data2[index].id, placeID: data2[index].lieu_id } }],
             })
         );
     };
