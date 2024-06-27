@@ -41,20 +41,50 @@ const InfoPopup = ({ route, navigation }) => {
     }
   };
 
+  const getStyleForPosition = (position) => {
+    switch(position) {
+        case 1: return { backgroundColor: 'gold' };
+        case 2: return { backgroundColor: 'silver'};
+        case 3: return { backgroundColor: '#c87533'};
+        default: return { backgroundColor: 'white'};
+    }
+};
+
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleInfoPress = () => {
+    const daysOfWeek = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+  
+    const openingHours = {};
+    for (let day of daysOfWeek) {
+      const hours = data2.horaires[day].split(': ')[1];
+      openingHours[day] = hours === 'Closed' ? 'Fermé' : hours;
+    }
+
+    let openingHoursString = '';
+    for (let day of daysOfWeek) {
+      openingHoursString += `${day.charAt(0).toUpperCase()}${day.slice(1)}: ${openingHours[day]}\n`;
+    }
+  
     Alert.alert(
       'Contact',
-      data2.telephone,
-      data2.horaires,
+      `\nAdresse: ${data2.adresse}
+      \n\nHoraires :\n${openingHoursString}
+      \n\nTéléphone: ${data2.telephone}
+      \n\nSite web: ${data2.site_web}`,
       [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
       { cancelable: true }
     );
   };
+  
+  
 
   const handleBackPress = () => {
-    navigation.goBack();
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.navigate('List', { user })
+    }
   };
 
   const handleHisto = () => {
@@ -103,21 +133,22 @@ const InfoPopup = ({ route, navigation }) => {
         <Image style={styles.iconProfil} source={require('../assets/icon_profil.png')} />
       </View>
 
-      <View style={styles.contentContainer}>
+      <View style={[styles.contentContainer, getStyleForPosition(id_classement)]}>
         <Image style={styles.placePicture} source={data2.image ? { uri: data2.image } : defaultImage} />
         <Text style={styles.placeName}>{data2.nom}</Text>
       </View>
+
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
-        <View style={styles.contentContainer2}>
+        <View style={[styles.contentContainer, {backgroundColor: "#fff"}]}>
           <Text style={styles.description}>{data2.description}</Text>
         </View>
       </ScrollView>
 
       <View style={styles.infoContainer}>
-        <Pressable style={[styles.infoButton, { marginRight: 5 }]} onPress={handleInfoPress}>
+        <Pressable style={[styles.infoButton, { marginRight: 12 }]} onPress={handleInfoPress}>
           <Text style={styles.buttonText}>Infos</Text>
         </Pressable>
-        <Pressable style={[styles.infoButton, { marginLeft: 5 }]} onPress={() => setModalVisible(true)}>
+        <Pressable style={[styles.infoButton, { marginLeft: 12 }]} onPress={() => setModalVisible(true)}>
           <Text style={styles.buttonText}>Carte</Text>
         </Pressable>
       </View>
@@ -134,19 +165,19 @@ const InfoPopup = ({ route, navigation }) => {
           <MapView
             style={styles.map}
             region={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
+              latitude: data2.lat,
+              longitude: data2.long,
+              latitudeDelta: 0.02,
+              longitudeDelta: 0.03,
             }}
           >
             <Marker
               coordinate={{
-                latitude: 37.78825,
-                longitude: -122.4324,
+                latitude: data2.lat,
+                longitude: data2.long,
               }}
-              title={'Place Name'}
-              description={'This is the place you are looking for'}
+              title={data2.nom}
+              description={data2.adresse}
             />
           </MapView>
           <Pressable style={styles.mapButton} onPress={() => setModalVisible(false)}>
@@ -155,7 +186,7 @@ const InfoPopup = ({ route, navigation }) => {
         </View>
       </Modal>
 
-      <Text style={styles.ratingText}>Note globale : {data2.rating}/5</Text>
+      <Text style={styles.ratingText}>Note globale : {data2.rating ? `${data2.rating}/5` : 'Non noté'}</Text>
       <StarRating
         color="#5db9f8"
         emptyColor="#FFFFFF"
@@ -189,6 +220,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#384454',
     alignItems: 'center',
+    paddingBottom: height * 0.1,
   },
   topContainer: {
     width: '100%',
@@ -228,21 +260,6 @@ const styles = StyleSheet.create({
     width: '90%',
     alignItems: 'center',
   },
-  contentContainer2: {
-    marginLeft: '5%',
-    marginRight: '5%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 2,
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    marginTop: 10,
-    width: '90%',
-    alignItems: 'center',
-  },
   placePicture: {
     width: width * 0.35,
     height: width * 0.35,
@@ -265,6 +282,7 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
     width: '100%',
+    marginTop: 10,
   },
   scrollViewContent: {
     alignItems: 'center',
@@ -274,7 +292,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: '15%',
+    marginTop: -20,
   },
   infoButton: {
     backgroundColor: '#5db9f8',
@@ -311,7 +329,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontStyle: 'italic',
     marginBottom: -10,
-    marginTop: 15,
+    marginTop: -20,
   },
   backButton: {
     backgroundColor: '#5db9f8',
@@ -349,6 +367,11 @@ const styles = StyleSheet.create({
     width: width * 0.12,
     height: width * 0.12,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
 export default InfoPopup;

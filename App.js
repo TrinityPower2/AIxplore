@@ -27,9 +27,9 @@ function App() {
                 <Stack.Screen name="WelcomeForm" component={WelcomeForm} />
                 <Stack.Screen name="Loading" component={Loading} />
                 <Stack.Screen name="List" component={List} />
+                <Stack.Screen name="InfoPopup" component={InfoPopup} />
                 <Stack.Screen name="RatingForm" component={RatingForm} />
                 <Stack.Screen name="Home" component={HomePage} />
-                <Stack.Screen name="InfoPopup" component={InfoPopup} />
                 <Stack.Screen name="Home2" component={HomePage2} />
                 <Stack.Screen name="History" component={History} />
             </Stack.Navigator>
