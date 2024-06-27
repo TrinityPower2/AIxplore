@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TextInput, Pressable, Dimensions, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TextInput, Pressable, 
+    Dimensions, ActivityIndicator, Alert, Modal } from 'react-native';
+
+import Slider from '@react-native-community/slider';
+import { MultipleSelectList } from 'react-native-dropdown-select-list';
+
 import * as Location from 'expo-location';
 import { CommonActions } from '@react-navigation/native';
 import { URL_API } from '../Variable';
@@ -56,6 +61,8 @@ const ListPage = ({ route, navigation }) => {
         }
     };
 
+    const [modalVisible, setModalVisible] = useState(false);
+
     const getStyleForPosition = (position) => {
         switch(position) {
             case 1: return { backgroundColor: 'gold', fontSize: 24, color: 'black' };
@@ -73,6 +80,16 @@ const ListPage = ({ route, navigation }) => {
             })
         );
     };
+
+    const [proximity, setProximity] = useState(1);
+    const [selected, setSelected] = useState([]);
+  
+    const mockTags = [
+      { key: '1', value: 'Musée' },
+      { key: '2', value: 'Théâtre' },
+      { key: '3', value: 'Monument' },
+      { key: '5', value: 'Architecture' },
+    ];
 
     const handleHisto = () => {
         navigation.dispatch(
@@ -130,7 +147,7 @@ const ListPage = ({ route, navigation }) => {
                     />
                 </View>
                 <View style={{ marginLeft: 10 }}>
-                    <Pressable onPress={() => navigation.navigate('Filters')}>
+                    <Pressable onPress={() => setModalVisible(true)}>
                         <View style={styles.iconBox}>
                             <Image source={require('../assets/icon_filters.png')} style={[styles.icon, { marginLeft: 10 }]} />
                         </View>
@@ -150,6 +167,49 @@ const ListPage = ({ route, navigation }) => {
                     </View>
                 ))}
             </ScrollView>
+
+            <Modal
+                animationType="slide"
+                transparent={false}
+                visible={modalVisible}
+                onRequestClose={() => {
+                setModalVisible(false);
+                }}
+            >
+                <View style={styles.modalContainer}>
+                    <Text style={styles.title}>Filtres</Text>
+                    <Text style={[styles.labelText, {textAlign: 'center'}]}>Proximité: {proximity} km</Text>
+                    
+                    <Slider
+                        style={{ width: 200, height: 40, alignSelf: 'center'}}
+                        minimumValue={1}
+                        maximumValue={100}
+                        minimumTrackTintColor="#5db9f8"
+                        maximumTrackTintColor="#FFFFFF"
+                        thumbTintColor="#000000"
+                        step={1}
+                        value={proximity}
+                        onValueChange={(value) => setProximity(value)}
+                    />
+
+                    <View style={{marginTop: 20}}>
+                        <MultipleSelectList
+                        setSelected={(val) => setSelected(val)}
+                        data={mockTags}
+                        save="value"
+                        value={selected}
+                        label="Lieux"
+                        boxStyles={{ backgroundColor: '#FFFFFF' }}
+                        dropdownStyles={{ backgroundColor: '#FFFFFF' }}
+                        />
+                    </View>
+
+                        <Pressable style={[styles.button, { marginTop: 30 }]} onPress={() => setModalVisible(false)}>
+                        <Text style={styles.buttonText}>Valider</Text>
+                        </Pressable>
+                </View>
+            </Modal>
+
             <View style={styles.botContainer}>
                 <Pressable onPress={handleHisto}>
                     <Image style={styles.iconHisto} source={require('../assets/icon_histo.png')} />
@@ -217,6 +277,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: height * 0.03
     },
+    labelText: {
+        color: 'white',
+        fontSize: 16,
+        marginTop: 20,
+    },
     cityContainer: {
         marginTop: 10,
         width: '80%',
@@ -267,6 +332,34 @@ const styles = StyleSheet.create({
         marginRight: 10,
         resizeMode: 'contain'
     },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#384454', 
+        padding: 20, 
+        height: '50%',
+    },
+    modalButton: {
+        backgroundColor: '#5db9f8',
+        padding: 12,
+        borderRadius: 10,
+        alignItems: 'center',
+        marginVertical: 25,
+        width: '40%',
+    },
+    button: {
+        backgroundColor: '#5db9f8', 
+        borderRadius: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+      },
+      buttonText: {
+        color: 'white', 
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
     botContainer: {
         width: '100%',
         height: height * 0.08,
