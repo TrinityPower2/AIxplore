@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Animated, StyleSheet, Text, TextInput, Button, Image, Pressable, Alert } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
-import { auth, firestore } from '../Firebase';
+import { auth } from '../Firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { URL_API } from '../Variable';
 
 const LoginPage = ({ navigation }) => {
     const logoOpacity = useRef(new Animated.Value(0)).current;
@@ -11,6 +12,8 @@ const LoginPage = ({ navigation }) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const [form, setForm] = useState(''); 
 
     useEffect(() => {
         Animated.sequence([
@@ -27,17 +30,52 @@ const LoginPage = ({ navigation }) => {
         ]).start(() => setTimeout(() => setShowLogin(true), 500));
     }, [logoOpacity, logoMoveY]);
 
+    const testForm = async (text, callback) => {
+        const API_URL = URL_API + 'testForm';
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "uid": text }),
+            });
+
+            const data = await response.json();
+            console.log('Received data:', data);
+
+            setForm(data["testForm"]); 
+            if (callback) callback(data["testForm"]);
+
+        } catch (error) {
+            console.error('Error sending data to server:', error);
+            Alert.alert('Erreur', `Erreur lors du chargement des données: ${error.message}`);
+        }
+    };
+
     const handleLogin = async () => {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                Alert.alert(`User Email: ${user.uid}`);
-                navigation.dispatch(
-                    CommonActions.reset({
-                        index: 0,
-                        routes: [{ name: 'Home', params: { user: user } }],
-                    })
-                );
+
+                testForm(user.uid, (formValue) => {
+                    if (formValue) {
+                        navigation.dispatch(
+                            CommonActions.reset({
+                                index: 0,
+                                routes: [{ name: 'Home', params: { user: user } }],
+                            })
+                        );
+                    } else {
+                        navigation.dispatch(
+                            CommonActions.reset({
+                                index: 0,
+                                routes: [{ name: 'WelcomeForm', params: { user: user } }],
+                            })
+                        );
+                    }
+                });
             })
             .catch((error) => {
                 const errorCode = error.code;
