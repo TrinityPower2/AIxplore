@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image, Text, Pressable, Dimensions, FlatList, Alert } from 'react-native';
 import StarRating from 'react-native-star-rating-widget';
 import { CommonActions } from '@react-navigation/native';
+import { URL_API } from '../Variable';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -40,6 +42,22 @@ const WelcomeForm = ({ route, navigation }) => {
       Alert.alert(`Vous n'avez pas noté tous les lieux !!! 😒`);
     } else {
       console.log(userAnswers);
+      const API_URL = URL_API + 'welcomeForm';
+
+      try {
+          const response = fetch(API_URL, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({"uid": user.uid, "score":userAnswers}),
+          });
+          response.json();
+      } catch (error) {
+          console.error('Error sending data to server:', error);
+      }
+
+
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
