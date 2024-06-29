@@ -15,6 +15,7 @@ const HistoryPage = ({ route, navigation }) => {
     useEffect(() => {
         const sendStringToServer = async (text) => {
             const API_URL = URL_API + 'historique';
+            console.log(text)
 
             try {
                 const response = await fetch(API_URL, {
@@ -57,7 +58,7 @@ const HistoryPage = ({ route, navigation }) => {
         { id: 10, name: "Tenth Place", detail: "Participant", image: require('../assets/icon_image.png') }
     ];
 
-    [5,2,3.5,4.5,1,0,]
+
 
 
     const getStyleForNotation = () => {

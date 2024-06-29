@@ -52,7 +52,6 @@ const WelcomeForm = ({ route, navigation }) => {
               },
               body: JSON.stringify({"uid": user.uid, "score":userAnswers}),
           });
-          response.json();
       } catch (error) {
           console.error('Error sending data to server:', error);
       }

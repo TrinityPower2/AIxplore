@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#384454',
     alignItems: 'center',
-    paddingBottom: height * 0.1,
+    paddingBottom: height * .1,
   },
   topContainer: {
     width: '100%',
