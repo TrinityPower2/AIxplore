@@ -36,12 +36,12 @@ const HomePage = ({ route, navigation }) => {
                 Animated.parallel([
                     Animated.timing(scaleAnim, {
                         toValue: 2,
-                        duration: 2500,
+                        duration: 2000,
                         useNativeDriver: true,
                     }),
                     Animated.timing(opacityAnim, {
                         toValue: 0,
-                        duration: 2500,
+                        duration: 2000,
                         useNativeDriver: true,
                     })
                 ]),
@@ -59,7 +59,7 @@ const HomePage = ({ route, navigation }) => {
                 ])
             ]),
             {
-                iterations: 2,
+                iterations: 1,
             }
         ).start();
 
@@ -70,7 +70,7 @@ const HomePage = ({ route, navigation }) => {
                     routes: [{ name: 'List', params: { user: user } }],
                 })
             );
-        }, 4500); 
+        }, 1500); 
     };
 
     const handleChange = () => {

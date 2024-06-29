@@ -37,7 +37,7 @@ const WelcomeForm = ({ route, navigation }) => {
 
   const handleValidate = () => {
     console.log(userAnswers)
-    if (userAnswers.some(v => v === undefined) || userAnswers.length < 3) {
+    if (userAnswers.some(v => v === undefined) || userAnswers.length < 15) {
       console.log(userAnswers);
       Alert.alert(`Vous n'avez pas noté tous les lieux !!! 😒`);
     } else {
