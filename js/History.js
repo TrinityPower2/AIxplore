@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, ScrollView, Image, Pressable, Alert, Dimensions
 import { CommonActions } from '@react-navigation/native';
 import { URL_API } from '../Variable';
 import defaultImage from '../assets/icon_image.png';
+import { auth } from '../Firebase';
+
 
 
 const { width, height } = Dimensions.get('window');
@@ -15,8 +17,6 @@ const HistoryPage = ({ route, navigation }) => {
     useEffect(() => {
         const sendStringToServer = async (text) => {
             const API_URL = URL_API + 'historique';
-            console.log(text)
-
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -67,7 +67,7 @@ const HistoryPage = ({ route, navigation }) => {
     };
 
     const goToNote = (index) => {
-        Alert.alert(`User Email: ${user.uid}`);
+        //Alert.alert(`User Email: ${user.uid}`);
         //navigation.navigate('RatingForm', { placeName: data[index].name });
         navigation.dispatch(
             CommonActions.reset({

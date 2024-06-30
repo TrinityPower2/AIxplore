@@ -3,6 +3,8 @@ import { View, StyleSheet, Image, Text, TextInput, Pressable } from 'react-nativ
 import { auth } from '../Firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { URL_API } from '../Variable';
+import { CommonActions } from '@react-navigation/native';
+
 
 const RegisterPage = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -35,7 +37,12 @@ const RegisterPage = ({ navigation }) => {
                     const user = userCredential.user;
                     console.log(user.uid)
                     sendStringToServer(user.uid);
-                    navigation.navigate('Login');
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 0,
+                            routes: [{ name: 'WelcomeForm', params: { user: user } }],
+                        })
+                    );
                 });
         } catch (error) {
             const errorCode = error.code;
