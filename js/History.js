@@ -127,19 +127,23 @@ const HistoryPage = ({ route, navigation }) => {
             
     
             <ScrollView style={styles.listContainer}>
-                {data2.map((item, index) => (
+                {data2.length === 0 ? (
+                    <Text style={styles.emptyText}>Votre historique est vide</Text>
+                ) : (
+                    data2.map((item, index) => (
                     <View key={item.id} style={[styles.item, getStyleForNotation()]}>
                         <Image source={item.image ? { uri: item.image } : defaultImage } style={styles.itemImage}></Image>
                         <Text
-                            style={{ fontSize: getStyleForNotation().fontSize, color: getStyleForNotation().color }}
+                        style={{ fontSize: getStyleForNotation().fontSize, color: getStyleForNotation().color }}
                         >
-                            {item.name}
+                        {item.name}
                         </Text>
                         <Pressable onPress={() => goToNote(index)} style={styles.noteButton}>
-                            <Text style={styles.noteButtonText}>Noter</Text>
+                        <Text style={styles.noteButtonText}>Noter</Text>
                         </Pressable>
                     </View>
-                ))}
+                    ))
+                )}
             </ScrollView>
 
             <View style={styles.botContainer}>
@@ -259,6 +263,14 @@ const styles = StyleSheet.create({
         marginRight: 10,
         resizeMode: 'contain'
     },
+    emptyText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        fontStyle: 'italic',
+        textAlign: 'center',
+        marginTop: 20,
+        color: '#fff',
+    },      
     botContainer: {
         width: '100%',
         height: height * 0.08,
