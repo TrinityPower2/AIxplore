@@ -115,7 +115,10 @@ const LoginPage = ({ navigation }) => {
                         placeholder="Password"
                         secureTextEntry={true}
                     />
-                    <Pressable onPress={handlePwd}>
+                    <Pressable style={styles.button} onPress={handleLogin}>
+                        <Text style={styles.textButton}>Login</Text>
+                    </Pressable>
+                    <Pressable onPress={handlePwd} style={styles.forgotPwd}>
                         <Text style={styles.textPwd}>Forgot Password ?</Text>
                     </Pressable>
                     <View style={styles.choiceContainer}>
@@ -127,9 +130,6 @@ const LoginPage = ({ navigation }) => {
                         <Image source={require('../assets/logo_google.png')} style={styles.icon} />
                         <Text style={styles.textGoogle}>Sign in with Google</Text>
                     </View>
-                    <Pressable style={styles.button} onPress={handleLogin}>
-                        <Text style={styles.textButton}>Login</Text>
-                    </Pressable>
                     <View style={styles.registerContainer}>
                         <Text style={{ color: 'white' }}>Not registered yet ? Click </Text>
                         <Pressable onPress={handleRegister}>
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     choiceContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        top: '15%'
+        top: '23%'
     },
     choiceLine: {
         flex: 1,
@@ -217,8 +217,11 @@ const styles = StyleSheet.create({
     choiceText: {
         color: '#4CB6DC'
     },
+    forgotPwd: {
+        top: '9%'
+    },
     googleContainer: {
-        top: '10%',
+        top: '15%',
         flexDirection: 'row',
         alignItems: 'center',
         margin: 50,
@@ -228,7 +231,7 @@ const styles = StyleSheet.create({
         padding: 10
     },
     button: {
-        top: '7%',
+        top: '4%',
         width: '80%',
         borderColor: '#FFFFFF',
         borderWidth: 1,
@@ -241,7 +244,7 @@ const styles = StyleSheet.create({
         padding: 10
     },
     registerContainer: {
-        top: '13%',
+        top: '10%',
         flexDirection: 'row'
     }
 });

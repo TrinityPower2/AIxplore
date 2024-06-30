@@ -71,6 +71,10 @@ const RegisterPage = ({ navigation }) => {
                 <Pressable style={styles.button} onPress={handleRegister}>
                     <Text style={styles.textButton}>Register</Text>
                 </Pressable>
+
+                <Pressable style={[styles.button, {marginTop: 35, width: '55%'}]} onPress={handleRegister}>
+                    <Text style={styles.textButton}>Back to Login</Text>
+                </Pressable>
             </View>
         </View>
     );
