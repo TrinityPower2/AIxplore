@@ -32,6 +32,7 @@ const LoginPage = ({ navigation }) => {
 
     const testForm = async (text, callback) => {
         const API_URL = URL_API + 'testForm';
+        console.log(text)
 
         try {
             const response = await fetch(API_URL, {
@@ -41,6 +42,8 @@ const LoginPage = ({ navigation }) => {
                 },
                 body: JSON.stringify({ "uid": text }),
             });
+
+            console.log(response)
 
             const data = await response.json();
             console.log('Received data:', data);

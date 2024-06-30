@@ -11,18 +11,21 @@ const HomePage2 = ({ route, navigation }) => {
     const opacityAnim = useRef(new Animated.Value(1)).current;
     const rotateAnim = useRef(new Animated.Value(0)).current;
 
+    const { user } = route.params;
+
+
     const startAnimation = () => {
         Animated.loop(
             Animated.sequence([
                 Animated.parallel([
                     Animated.timing(scaleAnim, {
                         toValue: 2,
-                        duration: 2500,
+                        duration: 2000,
                         useNativeDriver: true,
                     }),
                     Animated.timing(opacityAnim, {
                         toValue: 0,
-                        duration: 2500,
+                        duration: 2000,
                         useNativeDriver: true,
                     })
                 ]),
@@ -40,44 +43,59 @@ const HomePage2 = ({ route, navigation }) => {
                 ])
             ]),
             {
-                iterations: 2,
+                iterations: 1,
             }
         ).start();
 
         setTimeout(() => {
-            navigation.navigate('List');
-        }, 4500); 
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'List', params: { user: user, aixplore:true } }],
+                })
+            );
+        }, 1500); 
     };
 
     const handleChange = () => {
         Animated.sequence([
             Animated.timing(rotateAnim, {
                 toValue: 1,
-                duration: 1500,
+                duration: 1000,
                 useNativeDriver: true,
             }),
             Animated.timing(rotateAnim, {
                 toValue: 0,
                 duration: 0,
                 useNativeDriver: true,
-            }),
-            Animated.timing(rotateAnim, {
-                toValue: 1,
-                duration: 1500,
-                useNativeDriver: true,
-            })
+            })            
         ]).start(() => {
             rotateAnim.setValue(0);
-            navigation.navigate('Home');
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'Home', params: { user: user } }],
+                })
+            );
         });
     };
 
     const handleHisto = () => {
-        navigation.navigate('History');
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'History', params: { user: user } }],
+            })
+        );
     };
 
     const handleHome = () => {
-        navigation.navigate('Home');
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Home', params: { user: user } }],
+            })
+        );
     };
 
     const handleLogout = () => {

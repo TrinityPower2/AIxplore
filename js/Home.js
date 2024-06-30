@@ -67,7 +67,7 @@ const HomePage = ({ route, navigation }) => {
             navigation.dispatch(
                 CommonActions.reset({
                     index: 0,
-                    routes: [{ name: 'List', params: { user: user } }],
+                    routes: [{ name: 'List', params: { user: user, aixplore:false } }],
                 })
             );
         }, 1500); 
@@ -77,7 +77,7 @@ const HomePage = ({ route, navigation }) => {
         Animated.sequence([
             Animated.timing(rotateAnim, {
                 toValue: 1,
-                duration: 1500,
+                duration: 1000,
                 useNativeDriver: true,
             }),
             Animated.timing(rotateAnim, {
@@ -85,14 +85,14 @@ const HomePage = ({ route, navigation }) => {
                 duration: 0,
                 useNativeDriver: true,
             }),
-            Animated.timing(rotateAnim, {
-                toValue: 1,
-                duration: 1500,
-                useNativeDriver: true,
-            })
         ]).start(() => {
             rotateAnim.setValue(0);
-            navigation.navigate('Home2');
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'Home2', params: { user: user } }],
+                })
+            );
         });
     };
 

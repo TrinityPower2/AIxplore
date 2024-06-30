@@ -15,6 +15,8 @@ const { width, height } = Dimensions.get('window');
 const ListPage = ({ route, navigation }) => {
     const [city, setCity] = useState('');
     const { user } = route.params;
+    const { aixplore } = route.params;
+
     const [loading, setLoading] = useState(true); // État de chargement
     const [data2, setData2] = useState([]); // État pour les données récupérées depuis le serveur
 
@@ -40,24 +42,50 @@ const ListPage = ({ route, navigation }) => {
     }, [location]);
 
     const sendLocationToServer = async (uid, lat, long) => {
-        const API_URL = URL_API + 'recommandation';
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ "uid": uid, "lat": lat, "long": long }),
-            });
 
-            const data = await response.json();
-            console.log(data)
-            setData2(data["recommandation"]);
-        } catch (error) {
-            console.error('Error sending data to server:', error);
-            Alert.alert('Erreur', `Erreur lors du chargement des données: ${error.message}`);
-        } finally {
-            setLoading(false); 
+        if (aixplore==true) {
+            const API_URL = URL_API + 'aixplore';
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "uid": uid, "lat": lat, "long": long }),
+                });
+
+                const data = await response.json();
+                console.log(data)
+                setData2(data["recommandation"]);
+            } catch (error) {
+                console.error('Error sending data to server:', error);
+                Alert.alert('Erreur', `Erreur lors du chargement des données: ${error.message}`);
+            } finally {
+                setLoading(false); 
+            }
+        }
+        else {
+
+            const API_URL = URL_API + 'recommandation';
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "uid": uid, "lat": lat, "long": long }),
+                });
+
+                const data = await response.json();
+                console.log(data)
+                setData2(data["recommandation"]);
+            } catch (error) {
+                console.error('Error sending data to server:', error);
+                Alert.alert('Erreur', `Erreur lors du chargement des données: ${error.message}`);
+            } finally {
+                setLoading(false); 
+            }
+            
         }
     };
 
