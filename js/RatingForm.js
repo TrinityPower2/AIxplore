@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, Image, Text, Pressable, Dimensions } from 'react-native';
+import { View, ScrollView, StyleSheet, Image, Text, Pressable, Dimensions, Alert } from 'react-native';
 import StarRating from 'react-native-star-rating-widget';
 import { URL_API } from '../Variable';
 import { CommonActions } from '@react-navigation/native';
@@ -12,11 +12,11 @@ const RatingForm = ({ route, navigation }) => {
   const { placeID } = route.params;
   const { placeName } = route.params;
 
-  const [crit1, setCrit1] = useState(1);
-  const [crit2, setCrit2] = useState(1);
-  const [crit3, setCrit3] = useState(1);
-  const [crit4, setCrit4] = useState(1);
-  const [noteFinale, setNoteFinale] = useState(1);
+  const [crit1, setCrit1] = useState();
+  const [crit2, setCrit2] = useState();
+  const [crit3, setCrit3] = useState();
+  const [crit4, setCrit4] = useState();
+  const [noteFinale, setNoteFinale] = useState();
 
   const sendRatingToServer = async (text) => {
     const API_URL = URL_API + 'rating';
@@ -42,6 +42,7 @@ const RatingForm = ({ route, navigation }) => {
     console.log(user.uid)
     console.log(placeID)
     console.log(placeName)
+    Alert.alert('Merci pour votre notation !', 'Votre avis a bien été enregistré !')
     sendRatingToServer(ratings)
     navigation.dispatch(
       CommonActions.reset({
@@ -52,8 +53,13 @@ const RatingForm = ({ route, navigation }) => {
   };
 
   const handleHisto = () => {
-    navigation.navigate('History');
-  };
+    navigation.dispatch(
+        CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'History', params: { user: user } }],
+        })
+    );
+};
 
   const handleHome = () => {
     navigation.dispatch(
@@ -91,7 +97,7 @@ const RatingForm = ({ route, navigation }) => {
         <View style={styles.listContainer}>
           <Pressable onPressIn={() => setCrit1(1)} onPressOut={() => {}}>
             <View style={{ marginBottom: 20 }}>
-              <Text style={styles.ratingText}>Expérience globale : {crit1}/5</Text>
+              <Text style={styles.ratingText}>Expérience globale : {crit1 ? `${crit1}/5` : 'Non noté'}</Text>
               <StarRating
                 color="#5db9f8"
                 emptyColor="#FFFFFF"
@@ -104,7 +110,7 @@ const RatingForm = ({ route, navigation }) => {
 
           <Pressable onPressIn={() => setCrit2(1)} onPressOut={() => {}}>
             <View style={{ marginBottom: 20 }}>
-              <Text style={styles.ratingText}>Accessibilité : {crit2}/5</Text>
+              <Text style={styles.ratingText}>Accessibilité : {crit2 ? `${crit2}/5` : 'Non noté'}</Text>
               <StarRating
                 color="#5db9f8"
                 emptyColor="#FFFFFF"
@@ -117,7 +123,7 @@ const RatingForm = ({ route, navigation }) => {
 
           <Pressable onPressIn={() => setCrit3(1)} onPressOut={() => {}}>
             <View style={{ marginBottom: 20 }}>
-              <Text style={styles.ratingText}>Qualité de l'accueil : {crit3}/5</Text>
+              <Text style={styles.ratingText}>Qualité de l'accueil : {crit3 ? `${crit3}/5` : 'Non noté'}</Text>
               <StarRating
                 color="#5db9f8"
                 emptyColor="#FFFFFF"
@@ -130,7 +136,7 @@ const RatingForm = ({ route, navigation }) => {
 
           <Pressable onPressIn={() => setCrit4(1)} onPressOut={() => {}}>
             <View style={{ marginBottom: 30 }}>
-              <Text style={styles.ratingText}>Rapport qualité-prix : {crit4}/5</Text>
+              <Text style={styles.ratingText}>Rapport qualité-prix : {crit4 ? `${crit4}/5` : 'Non noté'}</Text>
               <StarRating
                 color="#5db9f8"
                 emptyColor="#FFFFFF"
@@ -143,7 +149,7 @@ const RatingForm = ({ route, navigation }) => {
 
           <Pressable onPressIn={() => setNoteFinale(1)} onPressOut={() => {}}>
             <View>
-              <Text style={[styles.ratingText, { fontWeight: 'bold' }]}>Note finale du lieu : {noteFinale}/5</Text>
+              <Text style={[styles.ratingText, { fontWeight: 'bold' }]}>Note finale du lieu : {noteFinale ? `${noteFinale}/5` : 'Non noté'}</Text>
               <StarRating
                 color="#5db9f8"
                 emptyColor="#FFFFFF"

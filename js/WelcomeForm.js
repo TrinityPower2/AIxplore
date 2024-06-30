@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, Text, Pressable, Dimensions, FlatList, Alert } from 'react-native';
+import { View, StyleSheet, Image, Text, Pressable, Dimensions, FlatList, Alert, ProgressBar } from 'react-native';
 import StarRating from 'react-native-star-rating-widget';
 import { CommonActions } from '@react-navigation/native';
 import { URL_API } from '../Variable';
@@ -66,19 +66,40 @@ const WelcomeForm = ({ route, navigation }) => {
     }
   };
 
+  const handleHisto = () => {
+    Alert.alert('Attention !', 'Vous devez remplir le formulaire avant d\'accéder aux fonctionnalités d\'AIxplore !');
+  };
+  
+  const handleHome = () => {
+    Alert.alert('Attention !', 'Vous devez remplir le formulaire avant d\'accéder aux fonctionnalités d\'AIxplore !');
+  };
+  
+  const handleLogout = () => {
+    auth.signOut().then(() => {
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+            })
+        );
+    }).catch((error) => {
+        console.error("Sign out error", error);
+    });
+  };
+
   const renderItem = ({ item, index }) => (
-    <View style={styles.slide}>
-      <Image source={{ uri: item.image }} style={styles.image} />
-      <Text style={styles.title}>{item.title}</Text>
-      <Text style={styles.ratingText}>Envie de visiter: {userAnswers[index]}/5</Text>
-      <StarRating
-        color="#5db9f8"
-        emptyColor="#FFFFFF"
-        size={40}
-        rating={userAnswers[index]}
-        onChange={(rating) => handleAnswer(index, rating)}
-      />
-    </View>
+  <View style={styles.slide}>
+    <Image source={{ uri: item.image }} style={styles.image} />
+    <Text style={styles.title}>{item.title}</Text>
+    <Text style={styles.ratingText}>Envie de visiter : {userAnswers[index] ? `${userAnswers[index]}/5` : 'Non noté'}</Text>
+    <StarRating
+      color="#5db9f8"
+      emptyColor="#FFFFFF"
+      size={40}
+      rating={userAnswers[index]}
+      onChange={(rating) => handleAnswer(index, rating)}
+    />
+  </View>
   );
 
   return (
@@ -87,6 +108,7 @@ const WelcomeForm = ({ route, navigation }) => {
         <Image style={styles.logo} source={require('../assets/real_logo.png')} />
         <Image style={styles.iconProfil} source={require('../assets/icon_profil.png')} />
       </View>
+      <Text style={styles.instructions}>Swipez à gauche ou à droite et notez votre envie de visiter chaque lieu !</Text>
       <FlatList
         data={data}
         renderItem={renderItem}
@@ -99,6 +121,18 @@ const WelcomeForm = ({ route, navigation }) => {
         <Pressable style={styles.button} onPress={handleValidate}>
           <Text style={styles.buttonText}>Valider</Text>
         </Pressable>
+      </View>
+
+      <View style={styles.botContainer}>
+                <Pressable onPress={handleHisto}>
+                    <Image style={styles.iconHisto} source={require('../assets/icon_histo.png')} />
+                </Pressable>
+                <Pressable onPress={handleHome}>
+                    <Image style={styles.iconHome} source={require('../assets/icon_home.png')} />
+                </Pressable>
+                <Pressable onPress={handleLogout}>
+                    <Image style={styles.iconOut} source={require('../assets/icon_out.png')} />
+                </Pressable>
       </View>
     </View>
   );
@@ -145,16 +179,11 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginBottom: 15,
   },
-  placeName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 30,
-  },
   ratingText: {
     color: '#FFFFFF',
     fontStyle: 'italic',
     fontSize: 16,
+    marginTop: 15,
     marginBottom: 10,
   },
   button: {
@@ -162,7 +191,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    marginTop: height * -0.3,
+    marginTop: height * -0.4,
   },
   buttonText: {
     color: '#FFFFFF',
@@ -180,9 +209,43 @@ const styles = StyleSheet.create({
     height: height * 0.2
   },
   title: {
-    marginTop: height * 0.05,
+    marginTop: height * 0.03,
     fontSize: 20,
+    fontWeight: 'bold',
     color: '#FFFFFF',
+  },
+  instructions: {
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontSize: 25,
+    fontStyle: 'italic',
+    marginTop: height * 0.03,
+    marginBottom: height * -0.1,
+    marginHorizontal: width * 0.05,
+  },
+  botContainer: {
+    width: '100%',
+    height: height * 0.08,
+    backgroundColor: '#232B35',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    position: 'absolute',
+    bottom: 0
+  },
+  iconHisto: {
+      width: width * 0.12,
+      height: width * 0.12,
+  },
+  iconHome: {
+      marginTop: height * 0.005,
+      width: width * 0.12,
+      height: width * 0.12,
+  },
+  iconOut: {
+      width: width * 0.12,
+      height: width * 0.12,
   },
 });
 

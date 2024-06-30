@@ -7,11 +7,11 @@ const { width, height } = Dimensions.get('window');
 const WelcomePage = ({ navigation }) => {
 
   const handleHisto = () => {
-    navigation.navigate('History');
+    Alert.alert('Attention !', 'Vous devez remplir le formulaire avant d\'accéder aux fonctionnalités d\'AIxplore !');
   };
   
   const handleHome = () => {
-    navigation.navigate('Home');
+    Alert.alert('Attention !', 'Vous devez remplir le formulaire avant d\'accéder aux fonctionnalités d\'AIxplore !');
   };
   
   const handleLogout = () => {
