@@ -16,6 +16,7 @@ const { width, height } = Dimensions.get('window');
 
 const ListPage = ({ route, navigation }) => {
     const [city, setCity] = useState('');
+    
     const { user } = route.params;
     const { aixplore } = route.params;
 
@@ -24,27 +25,44 @@ const ListPage = ({ route, navigation }) => {
 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
+    const [proximity, setProximity] = useState(5);
+
+    
 
     useEffect(() => {
         (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
-                return;
+            try {
+                let { status } = await Location.requestForegroundPermissionsAsync();
+                console.log("Statut de la permission:", status);
+    
+                if (status !== 'granted') {
+                    setErrorMsg('Permission to access location was denied');
+                    console.log("Permission refusée");
+                    return;
+                }
+                console.log("Permission accordée");
+                let loc = await Location.getCurrentPositionAsync({});
+                setLocation(loc);
+            } catch (error) {
+                //console.error("Erreur lors de la demande de permission ou de l'obtention de la position:", error);
+                setErrorMsg('An error occurred while fetching the location');
+                setLoading(false); 
+
             }
-            let loc = await Location.getCurrentPositionAsync({});
-            setLocation(loc);
         })();
     }, []);
 
     useEffect(() => {
+        console.log(location)
         if (location) {
-            sendLocationToServer(user.uid, location.coords.latitude, location.coords.longitude);
+            sendLocationToServer(user.uid, location.coords.latitude, location.coords.longitude, city, proximity);
         }
+
     }, [location]);
 
-    const sendLocationToServer = async (uid, lat, long) => {
 
+
+    const sendLocationToServer = async (uid, lat, long, city, proximity) => {
         if (aixplore==true) {
             const API_URL = URL_API + 'aixplore';
             try {
@@ -53,12 +71,13 @@ const ListPage = ({ route, navigation }) => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ "uid": uid, "lat": lat, "long": long }),
+                    body: JSON.stringify({ "uid": uid, "lat": lat, "long": long, "city":city, "proximity":proximity }),
                 });
 
                 const data = await response.json();
                 console.log(data)
                 setData2(data["recommandation"]);
+
             } catch (error) {
                 console.error('Error sending data to server:', error);
                 Alert.alert('Erreur', `Erreur lors du chargement des données: ${error.message}`);
@@ -75,7 +94,7 @@ const ListPage = ({ route, navigation }) => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ "uid": uid, "lat": lat, "long": long }),
+                    body: JSON.stringify({ "uid": uid, "lat": lat, "long": long, "city":city, "proximity":proximity }),
                 });
 
                 const data = await response.json();
@@ -90,6 +109,22 @@ const ListPage = ({ route, navigation }) => {
             
         }
     };
+
+    const handleSubmit = () => {
+        if (city) {
+            sendLocationToServer(user.uid, location.coords.latitude, location.coords.longitude, city, proximity);
+            setCity("")
+            
+        }
+    };
+
+    const handleSubmitfilter = () => {
+        sendLocationToServer(user.uid, location.coords.latitude, location.coords.longitude, city, proximity);
+        setCity("")
+            
+    };
+
+
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -111,7 +146,6 @@ const ListPage = ({ route, navigation }) => {
         );
     };
 
-    const [proximity, setProximity] = useState(1);
     const [selected, setSelected] = useState([]);
   
     const mockTags = [
@@ -152,6 +186,8 @@ const ListPage = ({ route, navigation }) => {
         });
     };
 
+
+
     if (loading) {
         return (
             <View style={styles.loadingContainer}>
@@ -174,8 +210,12 @@ const ListPage = ({ route, navigation }) => {
                         onChangeText={setCity}
                         value={city}
                         placeholder="Paris"
+                        
                     />
                 </View>
+                <Pressable style={styles.iconBox} onPress={handleSubmit}>
+                    <Text style={styles.submitButtonText}>Valider</Text>
+                </Pressable>
                 <View style={{ marginLeft: 10 }}>
                     <Pressable onPress={() => setModalVisible(true)}>
                         <View style={styles.iconBox}>
@@ -213,7 +253,7 @@ const ListPage = ({ route, navigation }) => {
                     <Slider
                         style={{ width: 200, height: 40, alignSelf: 'center'}}
                         minimumValue={1}
-                        maximumValue={100}
+                        maximumValue={20}
                         minimumTrackTintColor="#5db9f8"
                         maximumTrackTintColor="#FFFFFF"
                         thumbTintColor="#000000"
@@ -234,7 +274,7 @@ const ListPage = ({ route, navigation }) => {
                         />
                     </View>
 
-                        <Pressable style={[styles.button, { marginTop: 30 }]} onPress={() => setModalVisible(false)}>
+                        <Pressable style={[styles.button, { marginTop: 30 }]} onPress={() => {handleSubmitfilter(), setModalVisible(false)}}>
                         <Text style={styles.buttonText}>Valider</Text>
                         </Pressable>
                 </View>
