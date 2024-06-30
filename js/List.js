@@ -9,6 +9,8 @@ import * as Location from 'expo-location';
 import { CommonActions } from '@react-navigation/native';
 import { URL_API } from '../Variable';
 import defaultImage from '../assets/icon_image.png';
+import { auth } from '../Firebase';
+
 
 const { width, height } = Dimensions.get('window');
 

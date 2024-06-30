@@ -3,6 +3,8 @@ import { View, ScrollView, StyleSheet, Image, Text, Pressable, Dimensions, Alert
 import StarRating from 'react-native-star-rating-widget';
 import { URL_API } from '../Variable';
 import { CommonActions } from '@react-navigation/native';
+import { auth } from '../Firebase';
+
 
 
 const { width, height } = Dimensions.get('window');
