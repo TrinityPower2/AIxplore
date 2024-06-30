@@ -98,7 +98,6 @@ const HomePage = ({ route, navigation }) => {
 
     const handleHisto = () => {
         sendStringToServer(user.uid);
-        Alert.alert(`User Email: ${user.uid}`);
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,

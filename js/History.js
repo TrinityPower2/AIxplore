@@ -15,8 +15,6 @@ const HistoryPage = ({ route, navigation }) => {
     useEffect(() => {
         const sendStringToServer = async (text) => {
             const API_URL = URL_API + 'historique';
-            console.log(text)
-
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -67,7 +65,7 @@ const HistoryPage = ({ route, navigation }) => {
     };
 
     const goToNote = (index) => {
-        Alert.alert(`User Email: ${user.uid}`);
+        //Alert.alert(`User Email: ${user.uid}`);
         //navigation.navigate('RatingForm', { placeName: data[index].name });
         navigation.dispatch(
             CommonActions.reset({
