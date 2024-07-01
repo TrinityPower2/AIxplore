@@ -134,7 +134,9 @@ const HistoryPage = ({ route, navigation }) => {
                     <View key={item.id} style={[styles.item, getStyleForNotation()]}>
                         <Image source={item.image ? { uri: item.image } : defaultImage } style={styles.itemImage}></Image>
                         <Text
-                        style={{ fontSize: getStyleForNotation().fontSize, color: getStyleForNotation().color }}
+                        style={{ fontSize: getStyleForNotation().fontSize, color: getStyleForNotation().color, paddingRight: width * 0.3}}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
                         >
                         {item.name}
                         </Text>

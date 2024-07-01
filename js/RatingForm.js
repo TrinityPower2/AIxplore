@@ -93,8 +93,8 @@ const RatingForm = ({ route, navigation }) => {
       </View>
 
       <View style={styles.contentContainer}>
-        <Text style={styles.placeName}>Vous venez de visiter : {placeName}</Text>
-        <Text style={[styles.subtitle, { marginBottom: 30 }]}>Notez le lieu que vous venez de visiter</Text>
+        <Text style={styles.placeName}>Vous venez de visiter : {'\n'}{placeName}</Text>
+        <Text style={styles.subtitle}>Notez le lieu que vous venez de visiter</Text>
 
         <View style={styles.listContainer}>
           <Pressable onPressIn={() => setCrit1(1)} onPressOut={() => {}}>
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
         marginTop: height * -0.07,
-        marginBottom: height * 0.03
+        marginBottom: height * 0.008
     },
     logo: {
         width: width * 0.3,
@@ -229,7 +229,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#FFFFFF',
+    textAlign: 'center',
     marginBottom: 10,
+    paddingHorizontal: width * 0.1,
   },
   ratingText: {
     color: '#FFFFFF',
@@ -246,11 +248,12 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
+    fontStyle: 'italic',
     color: '#FFFFFF',
     textAlign: 'center',
     paddingHorizontal: 30,
     lineHeight: 24,
-    marginBottom: 20,
+    marginBottom: 30,
   },
   button: {
     backgroundColor: '#5db9f8',

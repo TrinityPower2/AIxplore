@@ -213,8 +213,8 @@ const ListPage = ({ route, navigation }) => {
                         
                     />
                 </View>
-                <Pressable style={styles.iconBox} onPress={handleSubmit}>
-                    <Text style={styles.submitButtonText}>Valider</Text>
+                <Pressable style={[styles.iconBox, {marginLeft: 10}]} onPress={handleSubmit}>
+                    <Text style={styles.submitButtonText}>Search</Text>
                 </Pressable>
                 <View style={{ marginLeft: 10 }}>
                     <Pressable onPress={() => setModalVisible(true)}>
@@ -226,16 +226,18 @@ const ListPage = ({ route, navigation }) => {
             </View>
     
             <ScrollView style={styles.listContainer}>
-                {data2.map((item, index) => (
-                    <View key={item.id} style={[styles.item, getStyleForPosition(index + 1)]}>
-                        <Image source={item.image ? { uri: item.image } : defaultImage } style={styles.itemImage}></Image>
-                        <Text
-                            style={{ fontSize: getStyleForPosition(index + 1).fontSize, color: getStyleForPosition(index + 1).color }}
-                            onPress={() => createPopup(index)}>
-                            {item.name}
-                        </Text>
-                    </View>
-                ))}
+            {data2.map((item, index) => (
+                <View key={item.id} style={[styles.item, getStyleForPosition(index + 1)]}>
+                    <Image source={item.image ? { uri: item.image } : defaultImage} style={styles.itemImage}></Image>
+                    <Text
+                    style={{ fontSize: getStyleForPosition(index + 1).fontSize, color: getStyleForPosition(index + 1).color }}
+                    numberOfLines={2}
+                    ellipsizeMode="tail"
+                    onPress={() => createPopup(index)}>
+                    {item.name}
+                    </Text>
+                </View>    
+            ))}
             </ScrollView>
 
             <Modal
@@ -379,7 +381,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     iconBox: {
-        backgroundColor: '#1abc9c',
+        backgroundColor: '#5db9f8',
         padding: 10,
         borderRadius: 10,
     },
@@ -394,7 +396,8 @@ const styles = StyleSheet.create({
         padding: 10,
         marginVertical: 5,
         marginHorizontal: 20,
-        borderRadius: 5
+        borderRadius: 5,
+        paddingLeft: width * 0.0075,
     },
     itemImage: {
         width: 50,
@@ -423,13 +426,19 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingVertical: 10,
         paddingHorizontal: 20,
-      },
-      buttonText: {
+    },
+    buttonText: {
         color: 'white', 
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center',
-      },
+    },
+    submitButtonText: {
+        color: 'black', 
+        fontSize: 16,
+        fontStyle: 'italic',
+        textAlign: 'center',
+    },
     botContainer: {
         width: '100%',
         height: height * 0.08,
