@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TextInput, Pressable, 
-    Dimensions, ActivityIndicator, Alert, Modal } from 'react-native';
+    Dimensions, ActivityIndicator, Alert, Modal, LogBox } from 'react-native';
 
 import Slider from '@react-native-community/slider';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
@@ -11,6 +11,7 @@ import { URL_API } from '../Variable';
 import defaultImage from '../assets/icon_image.png';
 import { auth } from '../Firebase';
 
+LogBox.ignoreAllLogs();
 
 const { width, height } = Dimensions.get('window');
 
@@ -20,14 +21,12 @@ const ListPage = ({ route, navigation }) => {
     const { user } = route.params;
     const { aixplore } = route.params;
 
-    const [loading, setLoading] = useState(true); // État de chargement
-    const [data2, setData2] = useState([]); // État pour les données récupérées depuis le serveur
+    const [loading, setLoading] = useState(true);
+    const [data2, setData2] = useState([]);
 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [proximity, setProximity] = useState(5);
-
-    
 
     useEffect(() => {
         (async () => {
@@ -38,102 +37,82 @@ const ListPage = ({ route, navigation }) => {
                 if (status !== 'granted') {
                     setErrorMsg('Permission to access location was denied');
                     console.log("Permission refusée");
-                    return;
+                    setLoading(false); 
+                } else {
+                    console.log("Permission accordée");
+                    let loc = await Location.getCurrentPositionAsync({});
+                    setLocation(loc);
                 }
-                console.log("Permission accordée");
-                let loc = await Location.getCurrentPositionAsync({});
-                setLocation(loc);
             } catch (error) {
-                //console.error("Erreur lors de la demande de permission ou de l'obtention de la position:", error);
                 setErrorMsg('An error occurred while fetching the location');
                 setLoading(false); 
-
             }
         })();
     }, []);
 
     useEffect(() => {
-        console.log(location)
+        console.log(location);
         if (location) {
             sendLocationToServer(user.uid, location.coords.latitude, location.coords.longitude, city, proximity);
         }
-
     }, [location]);
 
-
+    useEffect(() => {
+        if (data2.length > 0) {
+            setLoading(false);
+        }
+    }, [data2]);
 
     const sendLocationToServer = async (uid, lat, long, city, proximity) => {
-        if (aixplore==true) {
-            const API_URL = URL_API + 'aixplore';
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ "uid": uid, "lat": lat, "long": long, "city":city, "proximity":proximity }),
-                });
+        setLoading(true);
+        const endpoint = aixplore ? 'aixplore' : 'recommandation';
+        const API_URL = URL_API + endpoint;
 
-                const data = await response.json();
-                console.log(data)
-                setData2(data["recommandation"]);
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "uid": uid, "lat": lat, "long": long, "city": city, "proximity": proximity }),
+            });
 
-            } catch (error) {
-                console.error('Error sending data to server:', error);
-                Alert.alert('Erreur', `Erreur lors du chargement des données: ${error.message}`);
-            } finally {
-                setLoading(false); 
-            }
-        }
-        else {
-
-            const API_URL = URL_API + 'recommandation';
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ "uid": uid, "lat": lat, "long": long, "city":city, "proximity":proximity }),
-                });
-
-                const data = await response.json();
-                console.log(data)
-                setData2(data["recommandation"]);
-            } catch (error) {
-                console.error('Error sending data to server:', error);
-                Alert.alert('Erreur', `Erreur lors du chargement des données: ${error.message}`);
-            } finally {
-                setLoading(false); 
-            }
-            
+            const data = await response.json();
+            console.log(data);
+            setData2(data["recommandation"]);
+        } catch (error) {
+            console.error('Error sending data to server:', error);
+            Alert.alert('Erreur', `Erreur lors du chargement des données: ${error.message}`);
+            setLoading(false);
         }
     };
 
     const handleSubmit = () => {
         if (city) {
-            sendLocationToServer(user.uid, location.coords.latitude, location.coords.longitude, city, proximity);
-            setCity("")
-            
+            sendLocationToServer(user.uid, null, null, city, proximity);
+            setCity("");
         }
     };
 
     const handleSubmitfilter = () => {
-        sendLocationToServer(user.uid, location.coords.latitude, location.coords.longitude, city, proximity);
-        setCity("")
-            
+        if (location) {
+            sendLocationToServer(user.uid, location.coords.latitude, location.coords.longitude, city, proximity);
+            setCity("");
+        } 
+        if (!location && city) {
+            sendLocationToServer(user.uid, null, null, city, proximity);
+            setCity("");
+        }
     };
-
-
 
     const [modalVisible, setModalVisible] = useState(false);
 
     const getStyleForPosition = (position) => {
         switch(position) {
-            case 1: return { backgroundColor: 'gold', fontSize: 24, color: 'black' };
-            case 2: return { backgroundColor: 'silver', fontSize: 20, color: 'black' };
-            case 3: return { backgroundColor: '#c87533', fontSize: 18, color: 'black' };
-            default: return { backgroundColor: 'white', fontSize: 16, color: 'black' };
+            case 1: return { backgroundColor: 'gold', fontSize: width * 0.05, color: 'black' };
+            case 2: return { backgroundColor: 'silver', fontSize: width * 0.05, color: 'black' };
+            case 3: return { backgroundColor: '#c87533', fontSize: width * 0.05, color: 'black' };
+            default: return { backgroundColor: 'white', fontSize: width * 0.05, color: 'black' };
         }
     };
 
@@ -141,7 +120,7 @@ const ListPage = ({ route, navigation }) => {
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
-                routes: [{ name: 'InfoPopup', params: { user: user, id_classement:data2[index].id, placeID: data2[index].lieu_id } }],
+                routes: [{ name: 'InfoPopup', params: { user: user, id_classement: data2[index].id, placeID: data2[index].lieu_id } }],
             })
         );
     };
@@ -186,14 +165,19 @@ const ListPage = ({ route, navigation }) => {
         });
     };
 
-
-
-    if (loading) {
+    const createLoading = () => {
         return (
             <View style={styles.loadingContainer}>
+                <Text style={styles.textLoading}>
+                    Merci de patienter quelques instants, je vous prépare vos recommandations.   
+                </Text>
                 <ActivityIndicator size="large" color="#0000ff" />
             </View>
         );
+    };
+
+    if (loading) {
+        return createLoading();
     }
 
     return (
@@ -210,7 +194,6 @@ const ListPage = ({ route, navigation }) => {
                         onChangeText={setCity}
                         value={city}
                         placeholder="Paris"
-                        
                     />
                 </View>
                 <Pressable style={[styles.iconBox, {marginLeft: 10}]} onPress={handleSubmit}>
@@ -233,6 +216,7 @@ const ListPage = ({ route, navigation }) => {
                     style={{ fontSize: getStyleForPosition(index + 1).fontSize, color: getStyleForPosition(index + 1).color }}
                     numberOfLines={2}
                     ellipsizeMode="tail"
+                    marginRight="15%"
                     onPress={() => createPopup(index)}>
                     {item.name}
                     </Text>
@@ -273,10 +257,11 @@ const ListPage = ({ route, navigation }) => {
                         label="Lieux"
                         boxStyles={{ backgroundColor: '#FFFFFF' }}
                         dropdownStyles={{ backgroundColor: '#FFFFFF' }}
+                        style={{marginBottom: height * -0.5}}
                         />
                     </View>
 
-                        <Pressable style={[styles.button, { marginTop: 30 }]} onPress={() => {handleSubmitfilter(), setModalVisible(false)}}>
+                        <Pressable style={[styles.button, { marginTop: height * 0.05 }]} onPress={() => {handleSubmitfilter(); setModalVisible(false);}}>
                         <Text style={styles.buttonText}>Valider</Text>
                         </Pressable>
                 </View>
@@ -319,7 +304,7 @@ const styles = StyleSheet.create({
     },
     topContainer: {
         width: '100%',
-        height: '18%',
+        height: height * 0.17,
         backgroundColor: '#232B35',
         flexDirection: 'row',
         alignItems: 'center',
@@ -467,6 +452,20 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#384454',
+    },
+    textLoading: {
+        fontSize: 16,
+        color: '#FFFFFF',
+        textAlign: 'center',
+        paddingHorizontal: 30,
+        lineHeight: 24,
+        marginBottom: 20,
+      },
+    loadHorizontal: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        padding: 10,
     },
 });
 

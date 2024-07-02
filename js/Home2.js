@@ -1,8 +1,10 @@
 import React, { useRef } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, Alert, Animated, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, Alert, Animated, Dimensions, LogBox } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CommonActions } from '@react-navigation/native';
 import { auth } from '../Firebase';
+
+LogBox.ignoreAllLogs();
 
 const { width, height } = Dimensions.get('window');
 

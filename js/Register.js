@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, Image, Text, TextInput, Pressable } from 'react-native';
+import { View, StyleSheet, Image, Text, TextInput, Pressable, LogBox } from 'react-native';
 import { auth } from '../Firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { URL_API } from '../Variable';
 import { CommonActions } from '@react-navigation/native';
 
+LogBox.ignoreAllLogs();
 
 const RegisterPage = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -40,7 +41,7 @@ const RegisterPage = ({ navigation }) => {
                     navigation.dispatch(
                         CommonActions.reset({
                             index: 0,
-                            routes: [{ name: 'WelcomeForm', params: { user: user } }],
+                            routes: [{ name: 'WelcomePage', params: { user: user } }],
                         })
                     );
                 });
@@ -50,6 +51,15 @@ const RegisterPage = ({ navigation }) => {
             alert(`ERROR: ${errorMessage}`);
         }
     };
+
+    const handleLogin = async () => {
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+            })
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -72,7 +82,7 @@ const RegisterPage = ({ navigation }) => {
                     <Text style={styles.textButton}>Register</Text>
                 </Pressable>
 
-                <Pressable style={[styles.button, {marginTop: 35, width: '55%'}]} onPress={handleRegister}>
+                <Pressable style={[styles.button, {marginTop: 35, width: '55%'}]} onPress={handleLogin}>
                     <Text style={styles.textButton}>Back to Login</Text>
                 </Pressable>
             </View>

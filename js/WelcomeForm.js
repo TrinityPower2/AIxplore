@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, Text, Pressable, Dimensions, FlatList, Alert } from 'react-native';
+import { View, StyleSheet, Image, Text, Pressable, Dimensions, FlatList, Alert, LogBox } from 'react-native';
 import StarRating from 'react-native-star-rating-widget';
 import { CommonActions } from '@react-navigation/native';
 import { ProgressBar } from 'react-native-paper';
 import { URL_API } from '../Variable';
 import { auth } from '../Firebase';
+
+LogBox.ignoreAllLogs();
 
 const { width, height } = Dimensions.get('window');
 

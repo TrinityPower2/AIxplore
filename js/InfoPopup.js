@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, Alert, Dimensions, Modal, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, Alert, Dimensions, Modal, ActivityIndicator, ScrollView, LogBox } from 'react-native';
 import StarRating from 'react-native-star-rating-widget';
 import MapView, { Marker } from 'react-native-maps';
 import { CommonActions } from '@react-navigation/native';
@@ -7,6 +7,7 @@ import { URL_API } from '../Variable';
 import defaultImage from '../assets/icon_image.png';
 import { auth } from '../Firebase';
 
+LogBox.ignoreAllLogs();
 
 const { width, height } = Dimensions.get('window');
 

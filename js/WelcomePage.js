@@ -1,10 +1,14 @@
 import React from 'react';
-import { View, StyleSheet, Image, Text, Pressable, Dimensions } from 'react-native';
+import { View, StyleSheet, Image, Text, Pressable, Dimensions, LogBox } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
+
+LogBox.ignoreAllLogs();
 
 const { width, height } = Dimensions.get('window');
 
+const WelcomePage = ({ route, navigation }) => {
 
-const WelcomePage = ({ navigation }) => {
+  const { user } = route.params;
 
   const handleHisto = () => {
     Alert.alert('Attention !', 'Vous devez remplir le formulaire avant d\'accéder aux fonctionnalités d\'AIxplore !');
@@ -27,6 +31,15 @@ const WelcomePage = ({ navigation }) => {
     });
   };
 
+  const handleForm = () => {
+    navigation.dispatch(
+      CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'WelcomeForm', params: { user: user } }],
+      })
+  );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
@@ -43,12 +56,10 @@ const WelcomePage = ({ navigation }) => {
           vous correspondent au mieux !
         </Text>
         <Text style={styles.subtitle}>
-          Une quinzaine de lieux apparaîtront à l'écran. Nous vous demandons de
-          noter, pour chacun de 1 à 10, votre envie de le visiter. Dès que vous
-          êtes prêt, cliquez sur le bouton ci-dessous pour commencer le
-          questionnaire.
+          Une quinzaine de lieux apparaîtra à l'écran. Nous vous demandons de
+          tous les noter de 0 à 5, selon votre envie de le visiter. Cliquez sur le bouton ci-dessous pour commencer.
         </Text>
-        <Pressable style={styles.button} onPress={() => navigation.navigate('WelcomeForm')}>
+        <Pressable style={styles.button} onPress={handleForm}>
           <Text style={styles.buttonText}>Commencer</Text>
         </Pressable>
       </View>

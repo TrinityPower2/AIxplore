@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, Image, Text, Pressable, Dimensions, Alert } from 'react-native';
+import { View, ScrollView, StyleSheet, Image, Text, Pressable, Dimensions, Alert, LogBox } from 'react-native';
 import StarRating from 'react-native-star-rating-widget';
 import { URL_API } from '../Variable';
 import { CommonActions } from '@react-navigation/native';
 import { auth } from '../Firebase';
 
-
+LogBox.ignoreAllLogs();
 
 const { width, height } = Dimensions.get('window');
 

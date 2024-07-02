@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Animated, StyleSheet, Text, TextInput, Button, Image, Pressable, Alert } from 'react-native';
+import { View, Animated, StyleSheet, Text, TextInput, Button, Image, Pressable, Alert, LogBox } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import { auth } from '../Firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { URL_API } from '../Variable';
+
+LogBox.ignoreAllLogs();
 
 const LoginPage = ({ navigation }) => {
     const logoOpacity = useRef(new Animated.Value(0)).current;
@@ -74,7 +76,7 @@ const LoginPage = ({ navigation }) => {
                         navigation.dispatch(
                             CommonActions.reset({
                                 index: 0,
-                                routes: [{ name: 'WelcomeForm', params: { user: user } }],
+                                routes: [{ name: 'WelcomePage', params: { user: user } }],
                             })
                         );
                     }
