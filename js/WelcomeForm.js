@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, Text, Pressable, Dimensions, FlatList, Alert, ProgressBar } from 'react-native';
+import { View, StyleSheet, Image, Text, Pressable, Dimensions, FlatList, Alert } from 'react-native';
 import StarRating from 'react-native-star-rating-widget';
 import { CommonActions } from '@react-navigation/native';
+import { ProgressBar } from 'react-native-paper';
 import { URL_API } from '../Variable';
 import { auth } from '../Firebase';
-
-
 
 const { width, height } = Dimensions.get('window');
 
 const WelcomeForm = ({ route, navigation }) => {
   const { user } = route.params;
-  const [userAnswers, setUserAnswers] = useState([, , ]);
+  const [userAnswers, setUserAnswers] = useState(new Array(15).fill(undefined));
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const data = [
     { id: '1', title: 'La Tour Eiffel', image: 'https://s.francaisfacile.rfi.fr/media/display/b5f7677a-6368-11ee-a106-005056bfb2b6/Tour-Eiffel.jpg' },
@@ -89,6 +89,11 @@ const WelcomeForm = ({ route, navigation }) => {
     });
   };
 
+  const handleScroll = (event) => {
+    const index = Math.floor(event.nativeEvent.contentOffset.x / width);
+    setCurrentIndex(index);
+  };
+
   const renderItem = ({ item, index }) => (
   <View style={styles.slide}>
     <Image source={{ uri: item.image }} style={styles.image} />
@@ -111,6 +116,7 @@ const WelcomeForm = ({ route, navigation }) => {
         <Image style={styles.iconProfil} source={require('../assets/icon_profil.png')} />
       </View>
       <Text style={styles.instructions}>Swipez à gauche ou à droite et notez votre envie de visiter chaque lieu !</Text>
+      <ProgressBar progress={(currentIndex + 1) / 15} color='#5db9f8' style={styles.progressBar}/>
       <FlatList
         data={data}
         renderItem={renderItem}
@@ -118,6 +124,7 @@ const WelcomeForm = ({ route, navigation }) => {
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
+        onScroll={handleScroll}
       />
       <View style={styles.contentContainer}>
         <Pressable style={styles.button} onPress={handleValidate}>
@@ -156,7 +163,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     marginTop: height * -0.07,
-    marginBottom: height * 0.03
+    marginBottom: height * 0.03,
   },
   logo: {
     width: width * 0.3,
@@ -204,7 +211,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    width,
+    width
   },
   image: {
     width: '80%',
@@ -222,8 +229,17 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontStyle: 'italic',
     marginTop: height * 0.03,
-    marginBottom: height * -0.1,
+    marginBottom: height * -0.01,
     marginHorizontal: width * 0.05,
+  },
+  progressBar: {
+    width: width * 0.5,
+    height: height * 0.05,
+    borderRadius: 5,
+    marginTop: height * 0.05,
+    marginBottom: height * -0.1,
+    borderWidth: 1,
+    borderColor: 'black'
   },
   botContainer: {
     width: '100%',
