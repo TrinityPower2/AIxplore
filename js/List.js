@@ -171,7 +171,7 @@ const ListPage = ({ route, navigation }) => {
                 <Text style={styles.textLoading}>
                     Merci de patienter quelques instants, je vous prépare vos recommandations.   
                 </Text>
-                <ActivityIndicator size="large" color="#0000ff" />
+                <ActivityIndicator size="large" color="#5db9f8" />
             </View>
         );
     };
@@ -186,7 +186,6 @@ const ListPage = ({ route, navigation }) => {
                 <Image style={styles.logo} source={require('../assets/real_logo.png')} />
                 <Image style={styles.iconProfil} source={require('../assets/icon_profil.png')} />
             </View>
-            <Text style={styles.title}>Liste des lieux à visiter</Text>
             <View style={styles.cityContainer}>
                 <View style={{ flex: 1 }}>
                     <CustomInput
@@ -208,6 +207,7 @@ const ListPage = ({ route, navigation }) => {
                 </View>
             </View>
     
+            <Text style={styles.listTitle}>Je vous recommande :</Text>
             <ScrollView style={styles.listContainer}>
             {data2.map((item, index) => (
                 <View key={item.id} style={[styles.item, getStyleForPosition(index + 1)]}>
@@ -233,7 +233,7 @@ const ListPage = ({ route, navigation }) => {
                 }}
             >
                 <View style={styles.modalContainer}>
-                    <Text style={styles.title}>Filtres</Text>
+                    <Text style={styles.filtersTitle}>Filtres</Text>
                     <Text style={[styles.labelText, {textAlign: 'center'}]}>Proximité: {proximity} km</Text>
                     
                     <Slider
@@ -248,22 +248,24 @@ const ListPage = ({ route, navigation }) => {
                         onValueChange={(value) => setProximity(value)}
                     />
 
-                    <View style={{marginTop: 20}}>
-                        <MultipleSelectList
-                        setSelected={(val) => setSelected(val)}
-                        data={mockTags}
-                        save="value"
-                        value={selected}
-                        label="Lieux"
-                        boxStyles={{ backgroundColor: '#FFFFFF' }}
-                        dropdownStyles={{ backgroundColor: '#FFFFFF' }}
-                        style={{marginBottom: height * -0.5}}
-                        />
+                    <View style={{ marginBottom: height * 0.1 }}>
+                        <View style={{ marginTop: 20, marginBottom: 10 }}>
+                            <MultipleSelectList
+                            setSelected={(val) => setSelected(val)}
+                            data={mockTags}
+                            save="value"
+                            value={selected}
+                            label="Lieux"
+                            boxStyles={{ backgroundColor: '#FFFFFF' }}
+                            dropdownStyles={{ backgroundColor: '#FFFFFF', marginBottom: height * -0.2 }}
+                            />
+                        </View>
+
+                        <Pressable style={[styles.button, { marginTop: height * 0.025 }]} onPress={() => {handleSubmitfilter(); setModalVisible(false);}}>
+                            <Text style={styles.buttonText}>Valider</Text>
+                        </Pressable>
                     </View>
 
-                        <Pressable style={[styles.button, { marginTop: height * 0.05 }]} onPress={() => {handleSubmitfilter(); setModalVisible(false);}}>
-                        <Text style={styles.buttonText}>Valider</Text>
-                        </Pressable>
                 </View>
             </Modal>
 
@@ -326,13 +328,21 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         marginTop: height * 0.105
     },
-    title: {
+    filtersTitle: {
         fontSize: 24,
         fontWeight: 'bold',
         color: 'white',
         marginTop: 10,
         textAlign: 'center',
         marginBottom: height * 0.03
+    },
+    listTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: 'white',
+        marginTop: height * 0.03,
+        textAlign: 'center',
+        marginBottom: height * 0.01
     },
     labelText: {
         color: 'white',
@@ -455,9 +465,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#384454',
     },
     textLoading: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#FFFFFF',
         textAlign: 'center',
+        fontStyle: 'italic',
         paddingHorizontal: 30,
         lineHeight: 24,
         marginBottom: 20,
