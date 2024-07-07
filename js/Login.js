@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Animated, StyleSheet, Text, TextInput, Button, Image, Pressable, Alert, LogBox } from 'react-native';
+import { View, Animated, StyleSheet, Text, TextInput, Image, Pressable, Alert, LogBox, Keyboard, Dimensions } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import { auth } from '../Firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { URL_API } from '../Variable';
 
 LogBox.ignoreAllLogs();
+
+const { width, height } = Dimensions.get('window');
 
 const LoginPage = ({ navigation }) => {
     const logoOpacity = useRef(new Animated.Value(0)).current;
@@ -15,7 +17,7 @@ const LoginPage = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const [form, setForm] = useState(''); 
+    const [form, setForm] = useState('');
 
     useEffect(() => {
         Animated.sequence([
@@ -30,11 +32,35 @@ const LoginPage = ({ navigation }) => {
                 useNativeDriver: true
             })
         ]).start(() => setTimeout(() => setShowLogin(true), 500));
+
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', _keyboardDidHide);
+
+        return () => {
+            keyboardDidShowListener.remove();
+            keyboardDidHideListener.remove();
+        };
     }, [logoOpacity, logoMoveY]);
+
+    const _keyboardDidShow = () => {
+        Animated.timing(logoMoveY, {
+            toValue: height * -0.175,
+            duration: 500,
+            useNativeDriver: true
+        }).start();
+    };
+
+    const _keyboardDidHide = () => {
+        Animated.timing(logoMoveY, {
+            toValue: -225,
+            duration: 500,
+            useNativeDriver: true
+        }).start();
+    };
 
     const testForm = async (text, callback) => {
         const API_URL = URL_API + 'testForm';
-        console.log(text)
+        console.log(text);
 
         try {
             const response = await fetch(API_URL, {
@@ -45,12 +71,12 @@ const LoginPage = ({ navigation }) => {
                 body: JSON.stringify({ "uid": text }),
             });
 
-            console.log(response)
+            console.log(response);
 
             const data = await response.json();
             console.log('Received data:', data);
 
-            setForm(data["testForm"]); 
+            setForm(data["testForm"]);
             if (callback) callback(data["testForm"]);
 
         } catch (error) {
@@ -60,7 +86,7 @@ const LoginPage = ({ navigation }) => {
     };
 
     const handleLogin = async () => {
-        signInWithEmailAndPassword(auth, email, password)
+        signInWithEmailAndPassword(auth, email.trim(), password.trim())
             .then((userCredential) => {
                 const user = userCredential.user;
 
@@ -87,7 +113,7 @@ const LoginPage = ({ navigation }) => {
                 const errorMessage = error.message;
                 console.log(errorCode, errorMessage);
                 Alert("LOGIN FAILED");
-            })
+            });
     };
 
     const handlePwd = () => {
@@ -99,20 +125,20 @@ const LoginPage = ({ navigation }) => {
     };
 
     return (
-        <View style={styles.container}> 
+        <View style={styles.container}>
             <Animated.Image source={require('../assets/real_logo.png')}
                 style={[styles.logo, { opacity: logoOpacity, transform: [{ translateY: logoMoveY }] }]} />
             {showLogin && (
                 <View style={styles.loginContainer}>
                     <CustomInput
                         imageSource={require('../assets/icon_username.png')}
-                        onChangeText={setEmail}
+                        onChangeText={(text) => setEmail(text.trim())}
                         value={email}
                         placeholder="Email"
                     />
                     <CustomInput
                         imageSource={require('../assets/icon_password.png')}
-                        onChangeText={setPassword}
+                        onChangeText={(text) => setPassword(text.trim())}
                         value={password}
                         placeholder="Password"
                         secureTextEntry={true}
@@ -164,9 +190,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#384454',
-    },
-    topContainer: {
-
     },
     logo: {
         width: 225,

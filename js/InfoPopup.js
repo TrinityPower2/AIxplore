@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, Alert, Dimensions, Modal, ActivityIndicator, ScrollView, LogBox } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, Dimensions, Modal, ActivityIndicator, ScrollView, LogBox, Linking } from 'react-native';
 import StarRating from 'react-native-star-rating-widget';
 import MapView, { Marker } from 'react-native-maps';
 import { CommonActions } from '@react-navigation/native';
@@ -16,6 +16,9 @@ const InfoPopup = ({ route, navigation }) => {
 
   const [loading, setLoading] = useState(true); 
   const [data2, setData2] = useState({});
+  const [darkOverlay, setDarkOverlay] = useState(false);
+  const [customAlertVisible, setCustomAlertVisible] = useState(false);
+  const [alertContent, setAlertContent] = useState(null);
 
   useEffect(() => {
     sendLocationToServer(user.uid, placeID);
@@ -38,7 +41,13 @@ const InfoPopup = ({ route, navigation }) => {
       setData2(data.informations);
     } catch (error) {
       console.error('Error sending data to server:', error);
-      Alert.alert('Erreur', `Erreur lors du chargement des données: ${error.message}`);
+      setAlertContent(
+        <View style={styles.alertTextContainer}>
+          <Text style={styles.alertText}>Erreur lors du chargement des données:</Text>
+          <Text style={styles.alertText2}>{error.message}</Text>
+        </View>
+      );
+      setCustomAlertVisible(true);
     } finally {
       setLoading(false);
     }
@@ -51,11 +60,12 @@ const InfoPopup = ({ route, navigation }) => {
         case 3: return { backgroundColor: '#c87533'};
         default: return { backgroundColor: 'white'};
     }
-};
+  };
 
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleInfoPress = () => {
+    setDarkOverlay(true);
     const daysOfWeek = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
   
     const openingHours = {};
@@ -68,19 +78,22 @@ const InfoPopup = ({ route, navigation }) => {
     for (let day of daysOfWeek) {
       openingHoursString += `${day.charAt(0).toUpperCase()}${day.slice(1)}: ${openingHours[day]}\n`;
     }
-  
-    Alert.alert(
-      'Contact',
-      `\nAdresse: ${data2.adresse}
-      \n\nHoraires :\n${openingHoursString}
-      \n\nTéléphone: ${data2.telephone}
-      \n\nSite web: ${data2.site_web}`,
-      [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
-      { cancelable: true }
+
+    setAlertContent(
+      <View style={styles.alertTextContainer}>
+        <Text style={styles.alertText}>Adresse</Text>
+        <Text style={styles.alertText2}>{data2.adresse}</Text>
+        <Text style={styles.alertText}>Horaires</Text>
+        <Text style={styles.alertText2}>{openingHoursString}</Text>
+        <Text style={styles.alertText}>Téléphone</Text>
+        <Text style={styles.alertText2}>{data2.telephone}</Text>
+        <Pressable onPress={() => openWebsite(data2.site_web)}>
+          <Text style={styles.linkText}>{data2.site_web}</Text>
+        </Pressable>
+      </View>
     );
+    setCustomAlertVisible(true);
   };
-  
-  
 
   const handleBackPress = () => {
     if (navigation.canGoBack()) {
@@ -129,6 +142,10 @@ const InfoPopup = ({ route, navigation }) => {
     );
   }
 
+  const openWebsite = (url) => {
+    Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
@@ -141,11 +158,11 @@ const InfoPopup = ({ route, navigation }) => {
         <Text style={styles.placeName}>{data2.nom}</Text>
       </View>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
-        <View style={[styles.contentContainer, {backgroundColor: "#fff"}]}>
+      <View style={styles.contentContainer2}>
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <Text style={styles.description}>{data2.description}</Text>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
 
       <View style={styles.infoContainer}>
         <Pressable style={[styles.infoButton, { marginRight: 12 }]} onPress={handleInfoPress}>
@@ -214,6 +231,30 @@ const InfoPopup = ({ route, navigation }) => {
           <Image style={styles.iconOut} source={require('../assets/icon_out.png')} />
         </Pressable>
       </View>
+
+      {darkOverlay && <View style={styles.overlay} />}
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={customAlertVisible}
+        onRequestClose={() => {
+          setCustomAlertVisible(false);
+          setDarkOverlay(false);
+        }}
+      >
+        <View style={styles.alertOverlay}>
+          <View style={styles.alertContainer}>
+            {alertContent}
+            <Pressable style={styles.alertButton} onPress={() => {
+              setCustomAlertVisible(false);
+              setDarkOverlay(false);
+            }}>
+              <Text style={styles.buttonText}>OK</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -223,7 +264,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#384454',
     alignItems: 'center',
-    paddingBottom: height * .1,
+    paddingBottom: height * 0.1,
   },
   topContainer: {
     width: '100%',
@@ -280,22 +321,30 @@ const styles = StyleSheet.create({
     color: '#333',
     textAlign: 'center',
     lineHeight: 24,
-    marginBottom: 20,
   },
-  scrollView: {
-    flex: 1,
-    width: '100%',
+  contentContainer2: {
+    marginLeft: '5%',
+    marginRight: '5%',
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
+    padding: 20,
+    borderRadius: 10,
     marginTop: 10,
+    width: '90%',
+    height: height * 0.3,
   },
   scrollViewContent: {
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingVertical: 10,
   },
   infoContainer: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: -20,
+    alignItems: 'center'
   },
   infoButton: {
     backgroundColor: '#5db9f8',
@@ -374,7 +423,66 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 1,
+  },
+  alertOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  alertContainer: {
+    width: '80%',
+    padding: 20,
+    backgroundColor: '#384454',
+    borderRadius: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  alertTextContainer: {
+    alignItems: 'center'
+  },
+  alertText: {
+    fontSize: height * 0.025,
+    fontWeight: 'bold',
+    color: '#5db9f8',
+    marginBottom: height * 0.01,
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+  alertText2: {
+    fontSize: height * 0.02,
+    color: 'white',
+    marginBottom: height * 0.03,
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+  linkText: {
+    fontSize: height * 0.02,
+    color: '#5db9f8',
+    textDecorationLine: 'underline',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  alertButton: {
+    backgroundColor: '#5db9f8',
+    padding: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: '40%',
+  },
 });
 
 export default InfoPopup;

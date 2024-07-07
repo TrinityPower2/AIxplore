@@ -210,17 +210,18 @@ const ListPage = ({ route, navigation }) => {
             <Text style={styles.listTitle}>Je vous recommande :</Text>
             <ScrollView style={styles.listContainer}>
             {data2.map((item, index) => (
-                <View key={item.id} style={[styles.item, getStyleForPosition(index + 1)]}>
-                    <Image source={item.image ? { uri: item.image } : defaultImage} style={styles.itemImage}></Image>
-                    <Text
-                    style={{ fontSize: getStyleForPosition(index + 1).fontSize, color: getStyleForPosition(index + 1).color }}
-                    numberOfLines={2}
-                    ellipsizeMode="tail"
-                    marginRight="15%"
-                    onPress={() => createPopup(index)}>
-                    {item.name}
-                    </Text>
-                </View>    
+                <Pressable onPress={() => createPopup(index)}>
+                    <View key={item.id} style={[styles.item, getStyleForPosition(index + 1)]}>
+                        <Image source={item.image ? { uri: item.image } : defaultImage} style={styles.itemImage}></Image>
+                        <Text
+                        style={{ fontSize: getStyleForPosition(index + 1).fontSize, color: getStyleForPosition(index + 1).color }}
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        marginRight="15%">
+                        {item.name}
+                        </Text>
+                    </View>  
+                </Pressable>  
             ))}
             </ScrollView>
 
@@ -302,7 +303,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#384454',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center',  
     },
     topContainer: {
         width: '100%',
