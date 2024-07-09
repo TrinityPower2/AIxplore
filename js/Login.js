@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Animated, StyleSheet, Text, TextInput, Image, Pressable, Alert, LogBox, Keyboard, Dimensions } from 'react-native';
+import { View, Animated, StyleSheet, Text, TextInput, Image, Pressable, Alert, LogBox, Keyboard, Dimensions, Platform } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import { auth } from '../Firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -33,29 +33,35 @@ const LoginPage = ({ navigation }) => {
             })
         ]).start(() => setTimeout(() => setShowLogin(true), 500));
 
-        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
-        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', _keyboardDidHide);
+        if (Platform.OS === 'android') {
+            const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
+            const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', _keyboardDidHide);
 
-        return () => {
-            keyboardDidShowListener.remove();
-            keyboardDidHideListener.remove();
-        };
+            return () => {
+                keyboardDidShowListener.remove();
+                keyboardDidHideListener.remove();
+            };
+        }
     }, [logoOpacity, logoMoveY]);
 
     const _keyboardDidShow = () => {
-        Animated.timing(logoMoveY, {
-            toValue: height * -0.175,
-            duration: 500,
-            useNativeDriver: true
-        }).start();
+        if (Platform.OS === 'android') {
+            Animated.timing(logoMoveY, {
+                toValue: height * -0.175,
+                duration: 500,
+                useNativeDriver: true
+            }).start();
+        }
     };
 
     const _keyboardDidHide = () => {
-        Animated.timing(logoMoveY, {
-            toValue: -225,
-            duration: 500,
-            useNativeDriver: true
-        }).start();
+        if (Platform.OS === 'android') {
+            Animated.timing(logoMoveY, {
+                toValue: -225,
+                duration: 500,
+                useNativeDriver: true
+            }).start();
+        }
     };
 
     const testForm = async (text, callback) => {
@@ -117,7 +123,7 @@ const LoginPage = ({ navigation }) => {
     };
 
     const handlePwd = () => {
-        navigation.navigate('NearbySearch');
+        Alert.alert("Work in Progress")
     };
 
     const handleRegister = () => {
@@ -154,10 +160,12 @@ const LoginPage = ({ navigation }) => {
                         <Text style={styles.choiceText}>   Or Connect Via Google   </Text>
                         <View style={styles.choiceLine}/>
                     </View>
-                    <View style={styles.googleContainer}>
-                        <Image source={require('../assets/logo_google.png')} style={styles.icon} />
-                        <Text style={styles.textGoogle}>Sign in with Google</Text>
-                    </View>
+                    <Pressable onPress={handlePwd}>
+                        <View style={styles.googleContainer}>
+                            <Image source={require('../assets/logo_google.png')} style={styles.icon} />
+                            <Text style={styles.textGoogle}>Sign in with Google</Text>
+                        </View>
+                    </Pressable>
                     <View style={styles.registerContainer}>
                         <Text style={{ color: 'white' }}>Not registered yet ? Click </Text>
                         <Pressable onPress={handleRegister}>

@@ -210,7 +210,7 @@ const InfoPopup = ({ route, navigation }) => {
       <StarRating
         color="#5db9f8"
         emptyColor="#FFFFFF"
-        size={40}
+        size={30}
         rating={data2.rating}
         onChange={() => {}}
         enableSwiping={false}
@@ -264,31 +264,28 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#384454',
     alignItems: 'center',
-    paddingBottom: height * 0.1,
+    paddingBottom: height * 0.05,
   },
   topContainer: {
     width: '100%',
-    height: '18%',
+    height: height * 0.12,
     backgroundColor: '#232B35',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    marginTop: height * -0.07,
     marginBottom: height * 0.005,
   },
   logo: {
     width: width * 0.3,
     height: height * 0.08,
     resizeMode: 'contain',
-    marginTop: height * 0.105,
   },
   iconProfil: {
     width: width * 0.1,
     height: width * 0.1,
     resizeMode: 'contain',
-    marginTop: height * 0.105,
   },
   contentContainer: {
     marginLeft: '5%',
@@ -311,13 +308,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   placeName: {
-    fontSize: 20,
+    fontSize: width > 320 ? 20 : 18,
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 5,
   },
   description: {
-    fontSize: 16,
+    fontSize: width > 320 ? 16 : 14,
     color: '#333',
     textAlign: 'center',
     lineHeight: 24,
@@ -335,23 +332,24 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 10,
     width: '90%',
-    height: height * 0.3,
+    height: height * 0.2,
   },
   scrollViewContent: {
     alignItems: 'center',
     paddingVertical: 10,
   },
   infoContainer: {
-    flex: 1,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    marginTop: 10,
+    marginBottom: 10,
   },
   infoButton: {
     backgroundColor: '#5db9f8',
     padding: 12,
     borderRadius: 10,
     alignItems: 'center',
-    marginVertical: 25,
     width: '40%',
   },
   modalContainer: {
@@ -369,26 +367,23 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   ratingContainer: {
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 20,
-    marginTop: 20,
+    marginVertical: 10,
   },
   ratingText: {
     color: '#FFFFFF',
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 16,
     fontStyle: 'italic',
-    marginBottom: -10,
-    marginTop: -20,
+    marginBottom: 10,
   },
   backButton: {
     backgroundColor: '#5db9f8',
     padding: 12,
     borderRadius: 10,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 10,
     width: '40%',
   },
   buttonText: {
@@ -411,7 +406,6 @@ const styles = StyleSheet.create({
     height: width * 0.12,
   },
   iconHome: {
-    marginTop: height * 0.005,
     width: width * 0.12,
     height: width * 0.12,
   },

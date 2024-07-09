@@ -249,7 +249,7 @@ const ListPage = ({ route, navigation }) => {
                         onValueChange={(value) => setProximity(value)}
                     />
 
-                    <View style={{ marginBottom: height * 0.1 }}>
+                    <View style={{ marginBottom: height * 0.2 }}>
                         <View style={{ marginTop: 20, marginBottom: 10 }}>
                             <MultipleSelectList
                             setSelected={(val) => setSelected(val)}
@@ -262,7 +262,7 @@ const ListPage = ({ route, navigation }) => {
                             />
                         </View>
 
-                        <Pressable style={[styles.button, { marginTop: height * 0.025 }]} onPress={() => {handleSubmitfilter(); setModalVisible(false);}}>
+                        <Pressable style={[styles.button, { marginTop: height * 0.15 }]} onPress={() => {handleSubmitfilter(); setModalVisible(false);}}>
                             <Text style={styles.buttonText}>Valider</Text>
                         </Pressable>
                     </View>
